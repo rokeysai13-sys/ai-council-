@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Team</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f12;--s1:#111418;--s2:#161b22;--b1:#1e2530;--b2:#2a3444;
+  --g:#7ee8a2;--g2:#5dd186;--blue:#60a5fa;--amber:#fbbf24;--red:#f87171;
+  --txt:#e2e8f0;--dim:#8da0b3;--muted:#3a4556;
+  --mono:'JetBrains Mono',monospace;--body:'Outfit',sans-serif;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--txt);font-family:var(--body);display:flex;flex-direction:column}
+
+nav{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:var(--s1);border-bottom:1px solid var(--b1);flex-shrink:0}
+.logo{font-size:15px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.logo b{color:var(--g)}
+.nr{display:flex;align-items:center;gap:10px}
+.online-dot{width:7px;height:7px;border-radius:50%;background:var(--g);animation:blink 2s infinite;box-shadow:0 0 6px var(--g)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.clr{font-family:var(--mono);font-size:9px;padding:4px 10px;border-radius:4px;border:1px solid var(--b2);background:none;color:var(--muted);cursor:pointer;letter-spacing:1px;transition:.15s;text-transform:uppercase}
+.clr:hover{border-color:var(--red);color:var(--red)}
+
+.wrap{display:flex;flex:1;overflow:hidden}
+
+aside{width:185px;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;padding:14px 0;flex-shrink:0}
+.sl{font-family:var(--mono);font-size:8px;letter-spacing:3px;color:var(--muted);padding:0 14px 10px;text-transform:uppercase}
+.ag{display:flex;align-items:center;gap:9px;padding:9px 14px;background:none;border:none;border-left:2px solid transparent;cursor:pointer;width:100%;text-align:left;transition:.15s}
+.ag:hover{background:rgba(255,255,255,.02)}
+.ag.on{background:rgba(126,232,162,.05);border-left-color:var(--g)}
+.agi{width:27px;height:27px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.i1{background:rgba(126,232,162,.12);color:var(--g)}
+.i2{background:rgba(96,165,250,.12);color:var(--blue)}
+.i3{background:rgba(251,191,36,.12);color:var(--amber)}
+.agn{font-size:12.5px;font-weight:500;color:var(--dim)}
+.ag.on .agn{color:var(--g)}
+.ags{font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:1px}
+.abot{margin-top:auto;padding:12px 14px 0;border-top:1px solid var(--b1)}
+.aml{font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.amr{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--muted);padding:2px 0}
+.amv{color:var(--g)}
+
+.chat{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.cht{padding:9px 16px;border-bottom:1px solid var(--b1);background:var(--s1);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.tag{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;padding:3px 9px;border-radius:3px;text-transform:uppercase}
+.tg{background:rgba(126,232,162,.1);color:var(--g);border:1px solid rgba(126,232,162,.2)}
+.tb{background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.2)}
+.ta{background:rgba(251,191,36,.1);color:var(--amber);border:1px solid rgba(251,191,36,.2)}
+.chd{font-size:10px;color:var(--muted);font-family:var(--mono)}
+
+.msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+.msgs::-webkit-scrollbar{width:2px}
+.msgs::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+
+.emp{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;pointer-events:none}
+.empi{font-size:32px;opacity:.15;margin-bottom:4px}
+.empt{font-size:20px;font-weight:700;color:var(--b2)}
+.emps{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px}
+
+.m{display:flex;flex-direction:column;gap:4px;animation:up .2s ease}
+@keyframes up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.ml2{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.m.u .ml2{text-align:right;color:rgba(126,232,162,.4)}
+.bub{padding:11px 14px;border-radius:7px;font-size:13px;line-height:1.75}
+.m.u .bub{background:rgba(126,232,162,.07);border:1px solid rgba(126,232,162,.13);align-self:flex-end;max-width:60%;color:var(--g);font-family:var(--mono);font-size:11.5px}
+.m.a .bub{background:var(--s2);border:1px solid var(--b1);border-left:2px solid var(--g);align-self:flex-start;max-width:92%}
+.m.a.isc .bub{border-left-color:var(--blue)}
+.m.a.isr .bub{border-left-color:var(--amber)}
+
+.dw{display:flex;flex-direction:column;gap:8px}
+.mc2{border:1px solid var(--b1);border-radius:5px;overflow:hidden}
+.mc2h{padding:4px 10px;background:rgba(0,0,0,.3);font-family:var(--mono);font-size:8px;color:var(--muted);display:flex;align-items:center;gap:5px;letter-spacing:2px}
+.dt{width:5px;height:5px;border-radius:50%}
+.dl{background:#f5a623}.dm{background:var(--blue)}.dq{background:#a855f7}
+.mc2b{padding:9px 11px;font-size:12.5px;line-height:1.7;color:var(--dim)}
+.bst{border:1px solid rgba(126,232,162,.2);border-radius:5px;overflow:hidden;background:rgba(126,232,162,.03)}
+.bsth{padding:4px 10px;background:rgba(126,232,162,.08);font-family:var(--mono);font-size:8px;color:var(--g);letter-spacing:2px}
+.bstb{padding:9px 11px;font-size:13.5px;line-height:1.75;color:var(--txt)}
+
+.bub pre{background:rgba(0,0,0,.5);border:1px solid var(--b2);border-radius:5px;padding:12px;overflow-x:auto;margin:8px 0;font-family:var(--mono);font-size:11.5px;line-height:1.6;color:#a8e6cf}
+.bub code{font-family:var(--mono);font-size:11.5px;background:rgba(0,0,0,.3);padding:1px 5px;border-radius:3px;color:var(--g)}
+
+/* streaming cursor */
+.cursor{display:inline-block;width:7px;height:14px;background:var(--g);margin-left:2px;animation:cur .7s infinite;vertical-align:middle;border-radius:1px}
+@keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
+
+.thk{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--s2);border:1px solid var(--b1);border-left:2px solid var(--g);border-radius:7px;align-self:flex-start;animation:up .2s ease}
+.m.thk.isc{border-left-color:var(--blue)}
+.thkt{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:2px}
+.dots{display:flex;gap:4px}
+.dots span{width:4px;height:4px;border-radius:50%;background:var(--g);animation:blink 1.2s infinite}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+
+.vot{font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:2px;text-align:center;padding:6px;opacity:.7}
+
+.ir{padding:12px 16px;border-top:1px solid var(--b1);background:var(--s1);display:flex;gap:9px;align-items:flex-end;flex-shrink:0}
+.iw{flex:1;position:relative}
+.pfx{position:absolute;left:12px;top:11px;font-family:var(--mono);font-size:11px;color:var(--g);opacity:.4;pointer-events:none}
+textarea{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:7px;color:var(--txt);font-family:var(--body);font-size:13.5px;padding:10px 12px 10px 32px;resize:none;outline:none;min-height:42px;max-height:120px;transition:.15s border-color;line-height:1.5}
+textarea:focus{border-color:rgba(126,232,162,.3)}
+textarea::placeholder{color:var(--muted)}
+.sb{width:42px;height:42px;border-radius:7px;background:var(--g);border:none;color:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:.15s;font-size:18px;font-weight:700}
+.sb:hover{background:var(--g2);transform:scale(1.04)}
+.sb:disabled{opacity:.3;cursor:not-allowed;transform:none}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">AI<b>TEAM</b></div>
+  <div class="nr">
+    <div class="online-dot"></div>
+    <button class="clr" onclick="clearSess()">Clear</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside>
+    <div class="sl">// agents</div>
+    <button class="ag on" onclick="pick('debate',this)">
+      <div class="agi i1">⚔</div>
+      <div><div class="agn">Debate</div><div class="ags">3 models · vote</div></div>
+    </button>
+    <button class="ag" onclick="pick('code',this)">
+      <div class="agi i2">{}</div>
+      <div><div class="agn">Code</div><div class="ags">deepseek-coder</div></div>
+    </button>
+    <button class="ag" onclick="pick('research',this)">
+      <div class="agi i3">◎</div>
+      <div><div class="agn">Research</div><div class="ags">llama3 + mistral</div></div>
+    </button>
+    <div class="abot">
+      <div class="aml">memory</div>
+      <div class="amr"><span>Session</span><span class="amv" id="sid">—</span></div>
+      <div class="amr"><span>Messages</span><span class="amv" id="mc">0</span></div>
+    </div>
+  </aside>
+
+  <div class="chat">
+    <div class="cht">
+      <span class="tag tg" id="atag">DEBATE</span>
+      <span class="chd" id="adesc">3 models stream in parallel · qwen votes best</span>
+    </div>
+    <div class="msgs" id="msgs">
+      <div class="emp" id="emp">
+        <div class="empi">◈</div>
+        <div class="empt">Ready</div>
+        <div class="emps">select agent · send a prompt</div>
+      </div>
+    </div>
+    <div class="ir">
+      <div class="iw">
+        <span class="pfx">&gt;_</span>
+        <textarea id="inp" placeholder="Ask anything..." rows="1"
+          onkeydown="onKey(event)" oninput="rsz(this)"></textarea>
+      </div>
+      <button class="sb" id="sbtn" onclick="send()">↑</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API='http://127.0.0.1:8000';
+let agent='debate', session='s_'+Math.random().toString(36).slice(2,8);
+let mc=0, busy=false;
+
+const META={
+  debate:{tag:'tg',label:'DEBATE',desc:'3 models analyzed · single best answer',cls:''},
+  code:  {tag:'tb',label:'CODE',  desc:'DeepSeek Coder streams response', cls:'isc'},
+  research:{tag:'ta',label:'RESEARCH',desc:'LLaMA3 + Mistral stream outputs',cls:'isr'},
+};
+
+document.getElementById('sid').textContent=session.slice(-6);
+
+function pick(a,btn){
+  agent=a;
+  document.querySelectorAll('.ag').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const m=META[a];
+  const t=document.getElementById('atag');
+  t.textContent=m.label; t.className='tag '+m.tag;
+  document.getElementById('adesc').textContent=m.desc;
+}
+function onKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}}
+function rsz(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px'}
+function ts(){return new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function sc(){const m=document.getElementById('msgs');m.scrollTop=m.scrollHeight}
+
+function hideEmp(){const e=document.getElementById('emp');if(e)e.remove()}
+
+function fmt(txt){
+  txt=txt.replace(/```(\w*)\n([\s\S]*?)```/g,(_,l,c)=>`<pre><code>${esc(c.trim())}</code></pre>`);
+  txt=txt.replace(/`([^`]+)`/g,'<code>$1</code>');
+  txt=txt.replace(/\n/g,'<br>');
+  return txt;
+}
+
+function addUser(txt){
+  hideEmp();
+  const d=document.createElement('div');
+  d.className='m u';
+  d.innerHTML=`<div class="ml2">you · ${ts()}</div><div class="bub">${esc(txt)}</div>`;
+  document.getElementById('msgs').appendChild(d);
+  sc();
+}
+
+function addThinking(){
+  removeThinking();
+  const d=document.createElement('div');
+  d.id='thk'; d.className='thk';
+  d.innerHTML=`<span class="thkt">processing</span><div class="dots"><span></span><span></span><span></span></div>`;
+  document.getElementById('msgs').appendChild(d); sc();
+}
+function removeThinking(){const t=document.getElementById('thk');if(t)t.remove()}
+
+// Create streaming AI bubble
+function createStreamBubble(extraCls=''){
+  const d=document.createElement('div');
+  d.className=`m a ${extraCls}`;
+  d.innerHTML=`<div class="ml2">${agent} agent · ${ts()}</div><div class="bub" id="sbub"></div>`;
+  document.getElementById('msgs').appendChild(d);
+  return d;
+}
+
+async function send(){
+  if(busy)return;
+  const inp=document.getElementById('inp');
+  const prompt=inp.value.trim();
+  if(!prompt)return;
+  busy=true;
+  document.getElementById('sbtn').disabled=true;
+  inp.value=''; inp.style.height='auto';
+  addUser(prompt);
+  addThinking();
+  try{
+    await streamRequest(prompt);
+    mc++;
+    document.getElementById('mc').textContent=mc*2;
+  }catch(e){
+    removeThinking();
+    addErr(e.message||'Connection failed — is the server running?');
+  }finally{
+    busy=false;
+    document.getElementById('sbtn').disabled=false;
+    inp.focus();
+  }
+}
+
+async function streamRequest(prompt){
+  const url=`${API}/stream?agent=${agent}&prompt=${encodeURIComponent(prompt)}&session_id=${session}`;
+  const res=await fetch(url);
+  if(!res.ok){const e=await res.json();throw new Error(e.detail||'Request failed')}
+
+  const reader=res.body.getReader();
+  const decoder=new TextDecoder();
+  let buf='';
+
+  removeThinking();
+
+  await streamSimple(reader, decoder, buf);
+}
+
+async function streamSimple(reader, decoder, buf){
+  const cls=agent==='code'?'isc':agent==='research'?'isr':'';
+  const wrap=createStreamBubble(cls);
+  const bub=document.getElementById('sbub');
+  bub.innerHTML='<span class="cursor"></span>';
+  let full='';
+
+  while(true){
+    const {done,value}=await reader.read();
+    if(done)break;
+    buf+=decoder.decode(value,{stream:true});
+    const lines=buf.split('\n');
+    buf=lines.pop();
+    for(const line of lines){
+      if(!line.startsWith('data:'))continue;
+      const raw=line.slice(5).trim();
+      if(!raw)continue;
+      try{
+        const ev=JSON.parse(raw);
+        if(ev.type==='chunk'){
+          full+=ev.text;
+          bub.innerHTML=fmt(full)+'<span class="cursor"></span>';
+          sc();
+        }else if(ev.type==='model_start'||ev.type==='model_end'||ev.type==='voting'){
+          // debate internals — skip, only show best
+        }else if(ev.type==='best'){
+          full=ev.text;
+          bub.innerHTML=fmt(full)+'<span class="cursor"></span>';
+          sc();
+        }else if(ev.type==='label'){
+          bub.innerHTML+=`<br><span style="font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:2px;display:block;margin:8px 0 4px">${ev.text}</span>`;
+        }else if(ev.type==='done'){
+          bub.innerHTML=fmt(full);
+        }else if(ev.type==='error'){
+          bub.innerHTML=`<span style="color:var(--red)">${esc(ev.text)}</span>`;
+        }
+      }catch{}
+    }
+  }
+}
+
+async function streamDebate(reader, decoder, buf){
+  const wrap=createStreamBubble('');
+  const bub=document.getElementById('sbub');
+  const dw=document.createElement('div'); dw.className='dw'; bub.appendChild(dw);
+
+  const dotCls={LLAMA3:'dl',MISTRAL:'dm',QWEN:'dq'};
+  let curCard=null, curBody=null, curText='';
+  let models={};
+
+  while(true){
+    const {done,value}=await reader.read();
+    if(done)break;
+    buf+=decoder.decode(value,{stream:true});
+    const lines=buf.split('\n');
+    buf=lines.pop();
+    for(const line of lines){
+      if(!line.startsWith('data:'))continue;
+      const raw=line.slice(5).trim();
+      if(!raw)continue;
+      try{
+        const ev=JSON.parse(raw);
+        if(ev.type==='model_start'){
+          curText='';
+          curCard=document.createElement('div'); curCard.className='mc2';
+          curCard.innerHTML=`<div class="mc2h"><span class="dt ${dotCls[ev.model]||''}"></span>${ev.model}</div>`;
+          curBody=document.createElement('div'); curBody.className='mc2b';
+          curBody.innerHTML='<span class="cursor"></span>';
+          curCard.appendChild(curBody);
+          dw.appendChild(curCard); sc();
+        }else if(ev.type==='chunk'&&curBody){
+          curText+=ev.text;
+          curBody.innerHTML=fmt(curText)+'<span class="cursor"></span>';
+          sc();
+        }else if(ev.type==='model_end'&&curBody){
+          curBody.innerHTML=fmt(curText);
+          models[curText]=curText;
+        }else if(ev.type==='voting'){
+          const v=document.createElement('div'); v.className='vot';
+          v.textContent='★ VOTING FOR BEST ANSWER...';
+          dw.appendChild(v); sc();
+        }else if(ev.type==='best'){
+          // remove voting text
+          const vs=dw.querySelectorAll('.vot'); vs.forEach(v=>v.remove());
+          const bc=document.createElement('div'); bc.className='bst';
+          bc.innerHTML=`<div class="bsth">★ BEST ANSWER</div><div class="bstb">${fmt(ev.text)}</div>`;
+          dw.appendChild(bc); sc();
+        }else if(ev.type==='error'){
+          bub.innerHTML=`<span style="color:var(--red)">${esc(ev.text)}</span>`;
+        }
+      }catch{}
+    }
+  }
+}
+
+function addErr(msg){
+  const d=document.createElement('div');
+  d.className='m a';
+  d.innerHTML=`<div class="ml2" style="color:var(--red)">error</div><div class="bub" style="border-left-color:var(--red);color:var(--red)">${esc(msg)}</div>`;
+  document.getElementById('msgs').appendChild(d); sc();
+}
+
+async function clearSess(){
+  try{await fetch(`${API}/memory/${session}`,{method:'DELETE'})}catch{}
+  session='s_'+Math.random().toString(36).slice(2,8);
+  document.getElementById('sid').textContent=session.slice(-6);
+  mc=0; document.getElementById('mc').textContent='0';
+  document.getElementById('msgs').innerHTML=`<div class="emp" id="emp"><div class="empi">◈</div><div class="empt">Cleared</div><div class="emps">memory reset · new session</div></div>`;
+}
+
+document.getElementById('inp').focus();
+</script>
+</body>
+</html>
