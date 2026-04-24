@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Team — History</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080b;--s1:#0b0f14;--s2:#0f1520;--b1:#1a2535;--b2:#22303f;
+  --g:#00ff9d;--blue:#4facfe;--amber:#ffd166;--red:#ff6b6b;--purple:#c084fc;
+  --txt:#d8e8f0;--dim:#4a6a80;--mono:'JetBrains Mono',monospace;--display:'Syne',sans-serif;
+}
+body{background:var(--bg);color:var(--txt);font-family:var(--mono);min-height:100vh}
+nav{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:var(--s1);border-bottom:1px solid var(--b1);position:sticky;top:0;z-index:100}
+nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--g),transparent);opacity:.35}
+.logo{font-family:var(--display);font-size:18px;font-weight:800;color:#fff}
+.logo em{color:var(--g);font-style:normal}
+.nav-r{display:flex;align-items:center;gap:12px}
+.back-btn{font-size:10px;padding:5px 14px;border:1px solid var(--b2);background:none;color:var(--dim);cursor:pointer;border-radius:4px;transition:.15s;text-decoration:none;letter-spacing:1px;text-transform:uppercase}
+.back-btn:hover{border-color:var(--g);color:var(--g)}
+
+.container{max-width:1100px;margin:0 auto;padding:24px}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--s1);border:1px solid var(--b1);border-radius:8px;padding:16px;text-align:center}
+.stat-num{font-family:var(--display);font-size:28px;font-weight:800;color:var(--g)}
+.stat-lbl{font-size:9px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.search-wrap{flex:1;position:relative}
+.search-wrap input{width:100%;background:var(--s1);border:1px solid var(--b2);border-radius:6px;color:var(--txt);font-family:var(--mono);font-size:12px;padding:9px 14px 9px 36px;outline:none;transition:.15s}
+.search-wrap input:focus{border-color:rgba(0,255,157,.35)}
+.search-wrap input::placeholder{color:var(--dim)}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:12px}
+.filter-btn{font-size:10px;padding:8px 14px;border:1px solid var(--b2);background:none;color:var(--dim);cursor:pointer;border-radius:6px;transition:.15s;letter-spacing:1px;text-transform:uppercase}
+.filter-btn:hover,.filter-btn.active{border-color:var(--g);color:var(--g);background:rgba(0,255,157,.05)}
+.filter-btn.f-code.active{border-color:var(--blue);color:var(--blue);background:rgba(79,172,254,.05)}
+.filter-btn.f-research.active{border-color:var(--amber);color:var(--amber);background:rgba(255,209,102,.05)}
+.filter-btn.f-debate.active{border-color:var(--purple);color:var(--purple);background:rgba(192,132,252,.05)}
+
+/* TABLE */
+.table-wrap{background:var(--s1);border:1px solid var(--b1);border-radius:10px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead tr{background:rgba(0,0,0,.3)}
+th{padding:10px 16px;font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;text-align:left;font-weight:500}
+td{padding:12px 16px;font-size:12px;border-top:1px solid var(--b1);vertical-align:top}
+tr:hover td{background:rgba(255,255,255,.02);cursor:pointer}
+.agent-tag{font-size:8px;padding:3px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:1px;font-weight:700;white-space:nowrap}
+.tag-debate{background:rgba(192,132,252,.12);color:var(--purple);border:1px solid rgba(192,132,252,.25)}
+.tag-code{background:rgba(79,172,254,.12);color:var(--blue);border:1px solid rgba(79,172,254,.25)}
+.tag-research{background:rgba(255,209,102,.12);color:var(--amber);border:1px solid rgba(255,209,102,.25)}
+.prompt-cell{max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--txt)}
+.response-cell{max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--dim)}
+.time-cell{font-size:10px;color:var(--dim);white-space:nowrap}
+.del-btn{padding:4px 8px;background:none;border:1px solid rgba(255,107,107,.2);color:rgba(255,107,107,.5);border-radius:4px;cursor:pointer;font-size:10px;transition:.15s}
+.del-btn:hover{border-color:var(--red);color:var(--red);background:rgba(255,107,107,.05)}
+.empty-state{text-align:center;padding:48px;color:var(--dim);font-size:12px;letter-spacing:1px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;display:none}
+.modal-overlay.show{display:flex}
+.modal{background:var(--s1);border:1px solid var(--b1);border-radius:12px;width:100%;max-width:800px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-h{padding:16px 20px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.modal-title{font-size:13px;font-weight:700;color:var(--txt);flex:1}
+.modal-close{background:none;border:none;color:var(--dim);cursor:pointer;font-size:18px;padding:4px;transition:.15s}
+.modal-close:hover{color:var(--red)}
+.modal-body{padding:20px;overflow-y:auto;flex:1}
+.modal-section{margin-bottom:16px}
+.modal-section-lbl{font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.modal-text{font-size:12.5px;line-height:1.8;color:var(--txt);background:var(--s2);border:1px solid var(--b1);border-radius:6px;padding:12px;white-space:pre-wrap;word-break:break-word}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">AI<em>TEAM</em> — History</div>
+  <div class="nav-r">
+    <a href="/" class="back-btn">← Back to Chat</a>
+  </div>
+</nav>
+
+<div class="container">
+  <!-- STATS -->
+  <div class="stats" id="stats">
+    <div class="stat-card"><div class="stat-num" id="s-total">—</div><div class="stat-lbl">Total Saved</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-debate" style="color:var(--purple)">—</div><div class="stat-lbl">Debates</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-code" style="color:var(--blue)">—</div><div class="stat-lbl">Code</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-research" style="color:var(--amber)">—</div><div class="stat-lbl">Research</div></div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search" placeholder="Search conversations..." oninput="doSearch(this.value)">
+    </div>
+    <button class="filter-btn active" onclick="filter('all',this)">All</button>
+    <button class="filter-btn f-debate" onclick="filter('debate',this)">Debate</button>
+    <button class="filter-btn f-code" onclick="filter('code',this)">Code</button>
+    <button class="filter-btn f-research" onclick="filter('research',this)">Research</button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Agent</th>
+          <th>Prompt</th>
+          <th>Response</th>
+          <th>Time</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="6" class="empty-state">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-h">
+      <span class="agent-tag tag-debate" id="modal-tag">DEBATE</span>
+      <span class="modal-title" id="modal-title">Conversation</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const API = 'http://127.0.0.1:8000';
+let allData = [];
+let currentFilter = 'all';
+
+async function loadStats() {
+  try {
+    const r = await fetch(`${API}/db/stats`);
+    const s = await r.json();
+    document.getElementById('s-total').textContent = s.total || 0;
+    document.getElementById('s-debate').textContent = s.by_agent?.debate || 0;
+    document.getElementById('s-code').textContent = s.by_agent?.code || 0;
+    document.getElementById('s-research').textContent = s.by_agent?.research || 0;
+  } catch(e) { console.error(e) }
+}
+
+async function loadConversations(agent=null) {
+  try {
+    const url = agent && agent !== 'all'
+      ? `${API}/db/conversations?limit=200&agent=${agent}`
+      : `${API}/db/conversations?limit=200`;
+    const r = await fetch(url);
+    allData = await r.json();
+    renderTable(allData);
+  } catch(e) {
+    document.getElementById('tbody').innerHTML = `<tr><td colspan="6" class="empty-state">Cannot connect to server</td></tr>`;
+  }
+}
+
+function renderTable(data) {
+  const tb = document.getElementById('tbody');
+  if(!data.length) {
+    tb.innerHTML = `<tr><td colspan="6" class="empty-state">No conversations yet — start chatting!</td></tr>`;
+    return;
+  }
+  tb.innerHTML = data.map(c => `
+    <tr onclick="openModal(${c.id})">
+      <td style="color:var(--dim);font-size:10px">${c.id}</td>
+      <td><span class="agent-tag tag-${c.agent}">${c.agent.toUpperCase()}</span></td>
+      <td class="prompt-cell">${esc(c.prompt)}</td>
+      <td class="response-cell">${esc(c.response.slice(0,120))}${c.response.length>120?'...':''}</td>
+      <td class="time-cell">${formatTime(c.created_at)}</td>
+      <td><button class="del-btn" onclick="event.stopPropagation();del(${c.id})">Delete</button></td>
+    </tr>
+  `).join('');
+}
+
+function formatTime(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-IN', {day:'2-digit',month:'short'}) + ' ' +
+         d.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit',hour12:false});
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function del(id) {
+  if(!confirm('Delete this conversation?')) return;
+  await fetch(`${API}/db/conversations/${id}`, {method:'DELETE'});
+  loadConversations(currentFilter);
+  loadStats();
+}
+
+function filter(agent, btn) {
+  currentFilter = agent;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadConversations(agent);
+}
+
+let searchTimer;
+function doSearch(q) {
+  clearTimeout(searchTimer);
+  if(!q.trim()) { renderTable(allData); return; }
+  searchTimer = setTimeout(async () => {
+    const r = await fetch(`${API}/db/search?q=${encodeURIComponent(q)}`);
+    const data = await r.json();
+    renderTable(data);
+  }, 300);
+}
+
+async function openModal(id) {
+  const c = allData.find(x => x.id === id);
+  if(!c) return;
+  document.getElementById('modal-tag').textContent = c.agent.toUpperCase();
+  document.getElementById('modal-tag').className = `agent-tag tag-${c.agent}`;
+  document.getElementById('modal-title').textContent = c.prompt.slice(0,80) + (c.prompt.length>80?'...':'');
+
+  let body = `
+    <div class="modal-section">
+      <div class="modal-section-lbl">Prompt</div>
+      <div class="modal-text">${esc(c.prompt)}</div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-lbl">Response</div>
+      <div class="modal-text">${esc(c.response)}</div>
+    </div>`;
+
+  if(c.extra) {
+    try {
+      const extra = JSON.parse(c.extra);
+      if(extra.winner) {
+        body += `<div class="modal-section"><div class="modal-section-lbl">Winner</div><div class="modal-text">${esc(extra.winner)}</div></div>`;
+      }
+    } catch{}
+  }
+
+  body += `<div class="modal-section"><div class="modal-section-lbl">Saved at</div><div class="modal-text">${formatTime(c.created_at)}</div></div>`;
+  document.getElementById('modal-body').innerHTML = body;
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeModal(e) {
+  if(!e || e.target === document.getElementById('modal')) {
+    document.getElementById('modal').classList.remove('show');
+  }
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal() });
+
+loadStats();
+loadConversations();
+</script>
+</body>
+</html>
