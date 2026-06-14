@@ -1,6 +1,24 @@
-echo "__pycache__/
+# Virtual environments
+.venv/
+venv/
+.venv_repair/
+
+# Python caching
+__pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Env config
 .env
-*.egg-info
+
+# Dynamic database files
+conversations.db
+memory/missions.json
+memory/projects.json
+memory/decision_log.json
+memory/chroma_db/
+
+# IDE files
 .vscode/
-" > .gitignore
+.idea/

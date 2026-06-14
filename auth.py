@@ -1,3 +1,4 @@
+from core.logger import logger
 import sqlite3
 import hashlib
 import secrets
@@ -11,6 +12,12 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+def hash_password(password, salt=None):
+    if not salt:
+        salt = secrets.token_hex(16)
+    hashed = hashlib.sha256((password + salt).encode('utf-8')).hexdigest()
+    return hashed, salt
+
 def init_auth():
     conn = get_db()
     conn.execute("""
@@ -18,6 +25,7 @@ def init_auth():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
             password_hash TEXT NOT NULL,
+            salt TEXT NOT NULL DEFAULT '',
             created_at TEXT NOT NULL
         )
     """)
@@ -30,22 +38,33 @@ def init_auth():
         )
     """)
     conn.commit()
+    
+    # Dynamic schema update: ensure 'salt' column exists
+    try:
+        cursor = conn.execute("PRAGMA table_info(users)")
+        cols = [r["name"] for r in cursor.fetchall()]
+        if "salt" not in cols:
+            conn.execute("ALTER TABLE users ADD COLUMN salt TEXT NOT NULL DEFAULT ''")
+            conn.commit()
+    except Exception as e:
+        logger.warning(f"Failed to migrate auth tables: {e}")
+
     # Create default admin user if no users exist
     count = conn.execute("SELECT COUNT(*) as c FROM users").fetchone()["c"]
     if count == 0:
-        create_user("kiran", "kiran123")
-        print("  Default user created: kiran / kiran123")
+        default_user = os.getenv("DEFAULT_USER", "kiran")
+        default_pass = os.getenv("DEFAULT_PASSWORD", "kiran123")
+        create_user(default_user, default_pass)
+        logger.info(f"  Default user created: {default_user} / [password hidden]")
     conn.close()
-
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
 
 def create_user(username, password):
     conn = get_db()
     try:
+        hashed, salt = hash_password(password)
         conn.execute(
-            "INSERT INTO users (username, password_hash, created_at) VALUES (?,?,?)",
-            (username.lower(), hash_password(password), datetime.now().isoformat())
+            "INSERT INTO users (username, password_hash, salt, created_at) VALUES (?,?,?,?)",
+            (username.lower(), hashed, salt, datetime.now().isoformat())
         )
         conn.commit()
         return True
@@ -57,12 +76,19 @@ def create_user(username, password):
 def login(username, password):
     conn = get_db()
     user = conn.execute(
-        "SELECT * FROM users WHERE username=? AND password_hash=?",
-        (username.lower(), hash_password(password))
+        "SELECT * FROM users WHERE username=?",
+        (username.lower(),)
     ).fetchone()
     if not user:
         conn.close()
         return None
+    
+    salt = user["salt"] if "salt" in user.keys() else ""
+    hashed, _ = hash_password(password, salt)
+    if user["password_hash"] != hashed:
+        conn.close()
+        return None
+        
     # Create session token
     token = secrets.token_urlsafe(32)
     expires = (datetime.now() + timedelta(days=7)).isoformat()
