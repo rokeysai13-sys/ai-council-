@@ -3153,3 +3153,88 @@ Redis offline: Timeout connecting to server
 2026-06-14 20:41:33 [INFO] kirannn: --- STARTING COLLABORATION ROUND 2/4 ---
 2026-06-14 20:41:33 [INFO] kirannn: [DIRECTOR] Running step for Agent: Code Analyzer (high)
 2026-06-14 20:41:35 [INFO] kirannn: [LLM] Model 'llama3' not found. Routing to matched local model: 'llama3:latest'
+2026-06-14 20:41:54 [INFO] kirannn: [Telegram] Launching bot...
+2026-06-14 20:41:55 [INFO] kirannn: [TELEGRAM] Bot starting with streaming support...
+2026-06-14 20:41:55 [ERROR] kirannn: [TELEGRAM] Fatal bot error: Event loop is closed
+2026-06-14 20:41:55 [ERROR] kirannn: [Telegram] Bot thread crashed with error: Event loop is closed. Restarting in 55s...
+2026-06-14 20:41:58 [INFO] kirannn: [AGENT Code Analyzer] Thought: After reviewing the blackboard and my inbox, I notice that there are some uncommitted changes in the codebase, which is a concern. Since the Commit Writer's last tool output suggests warnings about LF replacement, I think it would be good to investigate further.
+2026-06-14 20:41:58 [INFO] kirannn: [AGENT Code Analyzer] Calling tool file_list with args {'path': '.'}
+2026-06-14 20:41:58 [INFO] kirannn: [AGENT Code Analyzer] Tool response: {'success': True, 'result': [{'name': '.env', 'type': 'file', 'size': 527}, {'name': '.env.example', 'type': 'file', 'size': 841}, {'name': '.git', 'type': 'dir', 'size': None}, {'name': '.gitignore',
+2026-06-14 20:41:58 [INFO] kirannn: [BLACKBOARD WRITE] Agent 'Code Analyzer' updated key 'Code Analyzer_last_tool_output' with rationale: Result of running tool: file_list
+2026-06-14 20:41:58 [INFO] kirannn: [DIRECTOR] Running step for Agent: Commit Writer (high)
+2026-06-14 20:42:00 [INFO] kirannn: [LLM] Model 'llama3' not found. Routing to matched local model: 'llama3:latest'
+2026-06-14 20:42:13 [INFO] kirannn: [AGENT Commit Writer] Thought: The Commit Writer has incomplete last_tool_output indicating warnings for some files, suggesting that uncommitted changes are present. The Conflict Resolver's output also indicates an error. I will call the file_list tool to list all files and directories in order to identify the source of these issues.
+2026-06-14 20:42:13 [INFO] kirannn: [AGENT Commit Writer] Calling tool file_list with args {}
+2026-06-14 20:42:13 [INFO] kirannn: [AGENT Commit Writer] Tool response: {'success': True, 'result': [{'name': '.env', 'type': 'file', 'size': 527}, {'name': '.env.example', 'type': 'file', 'size': 841}, {'name': '.git', 'type': 'dir', 'size': None}, {'name': '.gitignore',
+2026-06-14 20:42:13 [INFO] kirannn: [BLACKBOARD WRITE] Agent 'Commit Writer' updated key 'Commit Writer_last_tool_output' with rationale: Result of running tool: file_list
+2026-06-14 20:42:13 [INFO] kirannn: [DIRECTOR] Running step for Agent: Conflict Resolver (medium)
+2026-06-14 20:42:15 [INFO] kirannn: [LLM] Model 'llama3' not found. Routing to matched local model: 'llama3:latest'
+2026-06-14 20:42:22 [INFO] kirannn: [WATCHDOG OK] All systems healthy @ 20:42:14
+2026-06-14 20:42:30 [INFO] kirannn: [AGENT Conflict Resolver] Thought: The conflict resolver tool has failed to resolve the conflicts, so we need to try a different approach.
+2026-06-14 20:42:30 [INFO] kirannn: [AGENT Conflict Resolver] Calling tool file_read with args {'path': '.git\\\\UNCOMMITTED'}
+2026-06-14 20:42:30 [INFO] kirannn: [AGENT Conflict Resolver] Tool response: {'success': False, 'error': "[Errno 2] No such file or directory: '.git\\\\UNCOMMITTED'"}
+2026-06-14 20:42:30 [INFO] kirannn: [BLACKBOARD WRITE] Agent 'Conflict Resolver' updated key 'Conflict Resolver_last_tool_output' with rationale: Result of running tool: file_read
+2026-06-14 20:42:30 [INFO] kirannn: --- STARTING COLLABORATION ROUND 3/4 ---
+2026-06-14 20:42:30 [INFO] kirannn: [DIRECTOR] Running step for Agent: Code Analyzer (high)
+2026-06-14 20:42:32 [INFO] kirannn: [LLM] Model 'llama3' not found. Routing to matched local model: 'llama3:latest'
+2026-06-14 20:42:50 [INFO] kirannn: [Telegram] Launching bot...
+2026-06-14 20:42:56 [INFO] kirannn: [TELEGRAM] Bot starting with streaming support...
+2026-06-14 20:42:56 [ERROR] kirannn: [TELEGRAM] Fatal bot error: Event loop is closed
+2026-06-14 20:42:56 [ERROR] kirannn: [Telegram] Bot thread crashed with error: Event loop is closed. Restarting in 60s...
+2026-06-14 20:42:59 [INFO] kirannn: [AGENT Code Analyzer] Thought: The Conflict Resolver has failed to resolve conflicts, so I should review uncommitted changes for syntax and logical errors.
+2026-06-14 20:42:59 [INFO] kirannn: [AGENT Code Analyzer] Calling tool file_read with args {'path': '__pycache__/'}
+2026-06-14 20:42:59 [INFO] kirannn: [AGENT Code Analyzer] Tool response: {'success': False, 'error': "[Errno 13] Permission denied: '__pycache__'"}
+2026-06-14 20:42:59 [INFO] kirannn: [BLACKBOARD WRITE] Agent 'Code Analyzer' updated key 'Code Analyzer_last_tool_output' with rationale: Result of running tool: file_read
+2026-06-14 20:42:59 [INFO] kirannn: [DIRECTOR] Running step for Agent: Commit Writer (high)
+2026-06-14 20:43:01 [INFO] kirannn: [LLM] Model 'llama3' not found. Routing to matched local model: 'llama3:latest'
+2026-06-14 20:43:13 [INFO] kirannn: [AGENT Commit Writer] Thought: The previous commit was unsuccessful due to a permission denied error and conflict resolver failed to resolve uncommitted changes. I will call the Code Analyzer tool to analyze the code again.
+2026-06-14 20:43:13 [INFO] kirannn: [AGENT Commit Writer] Calling tool Code Analyzer with args {}
+2026-06-14 20:43:13 [INFO] kirannn: [AGENT Commit Writer] Tool response: {'success': False, 'error': "Unknown tool: Code Analyzer. Available: ['file_read', 'file_write', 'file_list', 'file_delete', 'shell_exec', 'code_exec', 'memory_read', 'memory_append', 'soul_read', 'we
+2026-06-14 20:43:13 [INFO] kirannn: [BLACKBOARD WRITE] Agent 'Commit Writer' updated key 'Commit Writer_last_tool_output' with rationale: Result of running tool: Code Analyzer
+2026-06-14 20:43:13 [INFO] kirannn: [DIRECTOR] Running step for Agent: Conflict Resolver (medium)
+2026-06-14 20:43:15 [INFO] kirannn: [LLM] Model 'llama3' not found. Routing to matched local model: 'llama3:latest'
+2026-06-14 20:43:31 [INFO] kirannn: [WATCHDOG OK] All systems healthy @ 20:43:22
+2026-06-14 20:43:31 [INFO] kirannn: [AGENT Conflict Resolver] Thought: The previous attempts to commit uncommitted changes were unsuccessful, so I will try to call the Code Analyzer tool to check if there are any code conflicts.
+2026-06-14 20:43:31 [INFO] kirannn: [AGENT Conflict Resolver] Calling tool Code Analyzer with args {}
+2026-06-14 20:43:31 [INFO] kirannn: [AGENT Conflict Resolver] Tool response: {'success': False, 'error': "Unknown tool: Code Analyzer. Available: ['file_read', 'file_write', 'file_list', 'file_delete', 'shell_exec', 'code_exec', 'memory_read', 'memory_append', 'soul_read', 'we
+2026-06-14 20:43:31 [INFO] kirannn: [BLACKBOARD WRITE] Agent 'Conflict Resolver' updated key 'Conflict Resolver_last_tool_output' with rationale: Result of running tool: Code Analyzer
+2026-06-14 20:43:31 [INFO] kirannn: --- STARTING COLLABORATION ROUND 4/4 ---
+2026-06-14 20:43:31 [INFO] kirannn: [DIRECTOR] Running step for Agent: Code Analyzer (high)
+2026-06-14 20:43:33 [INFO] kirannn: [LLM] Model 'llama3' not found. Routing to matched local model: 'llama3:latest'
+2026-06-14 20:43:42 [INFO] kirannn: [AGENT Code Analyzer] Thought: I should try to resolve the permission denied error by checking if I have read access to the '__pycache__' directory.
+2026-06-14 20:43:42 [INFO] kirannn: [AGENT Code Analyzer] Calling tool file_list with args {'path': '__pycache__'}
+2026-06-14 20:43:42 [INFO] kirannn: [AGENT Code Analyzer] Tool response: {'success': True, 'result': [{'name': 'auth.cpython-314.pyc', 'type': 'file', 'size': 11990}, {'name': 'database.cpython-314.pyc', 'type': 'file', 'size': 14810}, {'name': 'main.cpython-314.pyc', 'typ
+2026-06-14 20:43:42 [INFO] kirannn: [BLACKBOARD WRITE] Agent 'Code Analyzer' updated key 'Code Analyzer_last_tool_output' with rationale: Result of running tool: file_list
+2026-06-14 20:43:42 [INFO] kirannn: [DIRECTOR] Running step for Agent: Commit Writer (high)
+2026-06-14 20:43:44 [INFO] kirannn: [LLM] Model 'llama3' not found. Routing to matched local model: 'llama3:latest'
+2026-06-14 20:43:56 [INFO] kirannn: [AGENT Commit Writer] Thought: As the Commit Writer, I need to resolve the conflict and commit all uncommitted changes in code and configuration files. Since Code Analyzer's tool is unknown, I will call the file_read(path) tool to read the files listed on the blackboard.
+2026-06-14 20:43:56 [INFO] kirannn: [AGENT Commit Writer] Calling tool file_read with args {'path': 'auth.cpython-314.pyc'}
+2026-06-14 20:43:56 [INFO] kirannn: [AGENT Commit Writer] Tool response: {'success': False, 'error': "[Errno 2] No such file or directory: 'auth.cpython-314.pyc'"}
+2026-06-14 20:43:56 [INFO] kirannn: [BLACKBOARD WRITE] Agent 'Commit Writer' updated key 'Commit Writer_last_tool_output' with rationale: Result of running tool: file_read
+2026-06-14 20:43:56 [INFO] kirannn: [DIRECTOR] Running step for Agent: Conflict Resolver (medium)
+2026-06-14 20:43:56 [INFO] kirannn: [Telegram] Launching bot...
+2026-06-14 20:43:58 [INFO] kirannn: [LLM] Model 'llama3' not found. Routing to matched local model: 'llama3:latest'
+2026-06-14 20:44:07 [INFO] kirannn: [TELEGRAM] Bot starting with streaming support...
+2026-06-14 20:44:07 [ERROR] kirannn: [TELEGRAM] Fatal bot error: Event loop is closed
+2026-06-14 20:44:07 [ERROR] kirannn: [Telegram] Bot thread crashed with error: Event loop is closed. Restarting in 60s...
+2026-06-14 20:44:16 [INFO] kirannn: [AGENT Conflict Resolver] Thought: The Commit Writer agent was unable to write changes due to a missing file, so I will call the File Read tool to check if the file exists and provide more information.
+2026-06-14 20:44:16 [INFO] kirannn: [AGENT Conflict Resolver] Calling tool file_read with args {'path': 'auth.cpython-314.pyc'}
+2026-06-14 20:44:16 [INFO] kirannn: [AGENT Conflict Resolver] Tool response: {'success': False, 'error': "[Errno 2] No such file or directory: 'auth.cpython-314.pyc'"}
+2026-06-14 20:44:16 [INFO] kirannn: [BLACKBOARD WRITE] Agent 'Conflict Resolver' updated key 'Conflict Resolver_last_tool_output' with rationale: Result of running tool: file_read
+2026-06-14 20:44:16 [INFO] kirannn: [DIRECTOR] Starting Council Vote Phase...
+2026-06-14 20:44:18 [INFO] kirannn: [LLM] Model 'llama3' not found. Routing to matched local model: 'llama3:latest'
+2026-06-14 20:44:27 [INFO] kirannn: [COUNCIL] Agent 'Code Analyzer' voted: REJECT | Feedback: The mission goal cannot be fulfilled due to unresolvable file conflicts. The Commit Writer and Confl...
+2026-06-14 20:44:29 [INFO] kirannn: [LLM] Model 'llama3' not found. Routing to matched local model: 'llama3:latest'
+2026-06-14 20:44:36 [INFO] kirannn: [COUNCIL] Agent 'Conflict Resolver' voted: REJECT | Feedback: The mission goal was not fully achieved due to unresolvable conflicts and file not found errors in '...
+2026-06-14 20:44:38 [INFO] kirannn: [LLM] Model 'llama3' not found. Routing to matched local model: 'llama3:latest'
+2026-06-14 20:44:39 [INFO] kirannn: [WATCHDOG OK] All systems healthy @ 20:44:31
+2026-06-14 20:44:46 [INFO] kirannn: [COUNCIL] Agent 'Commit Writer' voted: REJECT | Feedback: The commit goal has not been fully achieved due to failed outputs from Commit Writer and Conflict Re...
+2026-06-14 20:45:07 [INFO] kirannn: [Telegram] Launching bot...
+2026-06-14 20:45:10 [INFO] kirannn: [TELEGRAM] Bot starting with streaming support...
+2026-06-14 20:45:10 [ERROR] kirannn: [TELEGRAM] Fatal bot error: Event loop is closed
+2026-06-14 20:45:10 [ERROR] kirannn: [Telegram] Bot thread crashed with error: Event loop is closed. Restarting in 60s...
+2026-06-14 20:45:47 [INFO] kirannn: [WATCHDOG OK] All systems healthy @ 20:45:39
+2026-06-14 20:46:10 [INFO] kirannn: [Telegram] Launching bot...
+2026-06-14 20:46:18 [INFO] kirannn: [TELEGRAM] Bot starting with streaming support...
+2026-06-14 20:46:18 [ERROR] kirannn: [TELEGRAM] Fatal bot error: Event loop is closed
+2026-06-14 20:46:18 [ERROR] kirannn: [Telegram] Bot thread crashed with error: Event loop is closed. Restarting in 60s...
