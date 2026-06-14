@@ -25,3 +25,4 @@ google-api-python-client
 ollama
 pypdf
 prometheus-client
+bcrypt

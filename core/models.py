@@ -8,9 +8,18 @@ MODELS = {
     "analysis": "qwen2.5:7b"
 }
 
+def _has_gpu() -> bool:
+    import subprocess
+    try:
+        # Check if nvidia-smi command works (indicating NVIDIA GPU/drivers are installed)
+        subprocess.run(["nvidia-smi"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        return True
+    except Exception:
+        return False
+
 OPTIONS = {
     "num_ctx": 2048,
-    "num_gpu": 99,
+    "num_gpu": 99 if _has_gpu() else 0,
     "num_thread": 8,
     "temperature": 0.7,
 }

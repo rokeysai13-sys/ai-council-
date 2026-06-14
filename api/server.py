@@ -264,6 +264,20 @@ def chat_agent(req: ChatReq, auth=Depends(verify_api_key)):
     if not sec["safe"] and sec["risk_level"] == "critical":
         raise HTTPException(status_code=400, detail=f"Security check failed: {sec['issues']}")
 
+    is_continue_cmd = req.message.strip().lower().replace(".", "").replace("!", "") == "continue jarvis"
+    if is_continue_cmd:
+        from core.agent import run_agent
+        from config.loader import MODEL_FALLBACK
+        import json
+        result = run_agent(req.message, model=req.model or MODEL_FALLBACK(), session_id=req.session_id)
+        if req.stream:
+            async def generate_raw():
+                yield f"data: {json.dumps({'type':'start'})}\n\n"
+                yield f"data: {json.dumps({'type':'token','text':result.get('response', '')})}\n\n"
+                yield f"data: {json.dumps({'type':'done','full':result.get('response', '')})}\n\n"
+            return StreamingResponse(generate_raw(), media_type="text/event-stream")
+        return result
+
     if req.stream:
         return _stream_response(req.message, req.model)
 
@@ -295,17 +309,37 @@ def chat_agent(req: ChatReq, auth=Depends(verify_api_key)):
     return result
 
 def _stream_response(message: str, model: str = None):
-    """Stream tokens as Server-Sent Events."""
+    """Stream tokens as Server-Sent Events asynchronously without blocking the event loop."""
+    import asyncio
+    import json
     from core.retry import ollama_stream
     from config.loader import MODEL_FALLBACK
-    import json
 
-    def generate():
+    async def generate():
         yield f"data: {json.dumps({'type':'start'})}\n\n"
         full_response = ""
-        for token in ollama_stream(message, model=model or MODEL_FALLBACK()):
+        
+        sync_gen = ollama_stream(message, model=model or MODEL_FALLBACK())
+        loop = asyncio.get_event_loop()
+        
+        def get_next():
+            try:
+                return next(sync_gen)
+            except StopIteration:
+                return None
+            except Exception as e:
+                return f"[Stream error: {e}]"
+
+        while True:
+            token = await loop.run_in_executor(None, get_next)
+            if token is None:
+                break
+            if token.startswith("[Stream error:"):
+                yield f"data: {json.dumps({'type':'error','text':token})}\n\n"
+                break
             full_response += token
             yield f"data: {json.dumps({'type':'token','text':token})}\n\n"
+            
         yield f"data: {json.dumps({'type':'done','full':full_response})}\n\n"
 
     return StreamingResponse(generate(), media_type="text/event-stream")
@@ -497,9 +531,10 @@ def get_db_stats(auth=Depends(verify_api_key)):
     return database.get_stats()
 
 @app.get("/db/conversations")
-def get_db_conversations(limit: int = 100, agent: str = None, username: str = "guest", auth=Depends(verify_api_key)):
+def get_db_conversations(limit: int = 100, page: int = 1, agent: str = None, username: str = "guest", auth=Depends(verify_api_key)):
     import database
-    return database.get_all_conversations(limit=limit, agent=agent, username=username)
+    offset = max(0, (page - 1) * limit)
+    return database.get_all_conversations(limit=limit, offset=offset, agent=agent, username=username)
 
 @app.delete("/db/conversations/{conv_id}")
 def delete_db_conversation(conv_id: int, auth=Depends(verify_api_key)):

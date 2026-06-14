@@ -9,9 +9,10 @@ user_profiles = {}
 def get_history(session_id):
     return memory.get(session_id, [])
 
-def update_profile(session_id, prompt):
+def update_profile(session_id, prompt, username="guest"):
     if session_id not in user_profiles:
-        user_profiles[session_id] = {"name": "Kiran", "message_count": 0, "topics": []}
+        name = username.capitalize() if username else "Guest"
+        user_profiles[session_id] = {"name": name, "message_count": 0, "topics": []}
     p = user_profiles[session_id]
     p["message_count"] += 1
     for kw, topic in {"python":"Python","javascript":"JavaScript","code":"coding","ml":"ML","ai":"AI","web":"web dev"}.items():
@@ -23,7 +24,8 @@ def build_context_prompt(prompt, session_id):
     if not profile:
         return prompt
     topics = ", ".join(profile.get("topics", [])) or "general"
-    return f"[User: Kiran | Interests: {topics}]\n{prompt}"
+    name = profile.get("name", "User")
+    return f"[User: {name} | Interests: {topics}]\n{prompt}"
 
 def save_to_memory(session_id, user_prompt, response, username="guest"):
     if session_id not in memory:
@@ -67,6 +69,20 @@ def _ask_stream(model_key, prompt, history=None, debate_phase=None):
     from core.models import ask_stream, MODELS
     return ask_stream(MODELS[model_key], prompt, history, model_key, debate_phase)
 
+async def _async_stream(model_key, prompt, history=None, debate_phase=None):
+    sync_gen = _ask_stream(model_key, prompt, history, debate_phase)
+    loop = asyncio.get_event_loop()
+    def get_next():
+        try:
+            return next(sync_gen)
+        except StopIteration:
+            return None
+    while True:
+        chunk = await loop.run_in_executor(executor, get_next)
+        if chunk is None:
+            break
+        yield chunk
+
 def _save_db(session_id, agent, prompt, response, extra=None, username="guest"):
     try:
         from database import save_conversation
@@ -77,7 +93,7 @@ def _save_db(session_id, agent, prompt, response, extra=None, username="guest"):
 async def run(agent, prompt, session_id="default", username="guest", use_web=False):
     history = load_user_memory(session_id, username)
     loop = asyncio.get_event_loop()
-    update_profile(session_id, prompt)
+    update_profile(session_id, prompt, username)
     enriched = build_context_prompt(prompt, session_id)
 
     # Inject web search if requested
@@ -127,7 +143,7 @@ async def run(agent, prompt, session_id="default", username="guest", use_web=Fal
 async def stream_run(agent, prompt, session_id="default", username="guest", use_web=False):
     history = load_user_memory(session_id, username)
     loop = asyncio.get_event_loop()
-    update_profile(session_id, prompt)
+    update_profile(session_id, prompt, username)
     enriched = build_context_prompt(prompt, session_id)
 
     if use_web:
@@ -144,7 +160,7 @@ async def stream_run(agent, prompt, session_id="default", username="guest", use_
     try:
         if agent == "code":
             full = ""
-            for chunk in _ask_stream("coder", enriched, history):
+            async for chunk in _async_stream("coder", enriched, history):
                 full += chunk
                 yield ev({"type": "chunk", "text": chunk})
             save_to_memory(session_id, prompt, full, username)
@@ -154,12 +170,12 @@ async def stream_run(agent, prompt, session_id="default", username="guest", use_
         elif agent == "research":
             yield ev({"type": "label", "text": "SUMMARY"})
             part1 = ""
-            for chunk in _ask_stream("general", enriched, history):
+            async for chunk in _async_stream("general", enriched, history):
                 part1 += chunk
                 yield ev({"type": "chunk", "text": chunk})
             yield ev({"type": "label", "text": "ANALYSIS"})
             part2 = ""
-            for chunk in _ask_stream("reason", enriched, history):
+            async for chunk in _async_stream("reason", enriched, history):
                 part2 += chunk
                 yield ev({"type": "chunk", "text": chunk})
             result = part1 + "\n\n" + part2
@@ -178,7 +194,7 @@ async def stream_run(agent, prompt, session_id="default", username="guest", use_
                     for model_key, label in [("general","LLAMA3"),("reason","MISTRAL"),("analysis","QWEN")]:
                         yield ev({"type": "model_start", "model": label, "phase": "research"})
                         text = ""
-                        for chunk in _ask_stream(model_key, enriched, history, debate_phase="research"):
+                        async for chunk in _async_stream(model_key, enriched, history, debate_phase="research"):
                             text += chunk
                             yield ev({"type": "chunk", "text": chunk})
                         research[label] = text
@@ -195,7 +211,7 @@ async def stream_run(agent, prompt, session_id="default", username="guest", use_
                           f"Round {round_num} of 2. Point out specific mistakes in the OTHER answers. Use bullet points.")
                     yield ev({"type": "model_start", "model": label, "phase": "critique"})
                     text = ""
-                    for chunk in _ask_stream(model_key, cp, None, debate_phase="critique"):
+                    async for chunk in _async_stream(model_key, cp, None, debate_phase="critique"):
                         text += chunk
                         yield ev({"type": "chunk", "text": chunk})
                     critiques[label] = text
@@ -210,7 +226,7 @@ async def stream_run(agent, prompt, session_id="default", username="guest", use_
                           f"Criticism:\n{received}\n\nRound {round_num} of 2. Rewrite fixing valid mistakes.")
                     yield ev({"type": "model_start", "model": label, "phase": "rewrite"})
                     text = ""
-                    for chunk in _ask_stream(model_key, rp, None, debate_phase="rewrite"):
+                    async for chunk in _async_stream(model_key, rp, None, debate_phase="rewrite"):
                         text += chunk
                         yield ev({"type": "chunk", "text": chunk})
                     new_answers[label] = text

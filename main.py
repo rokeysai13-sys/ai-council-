@@ -62,21 +62,54 @@ def start_fastapi():
     uvicorn.run("api.server:app", host="0.0.0.0", port=8000, reload=False, log_level="info")
 
 def start_telegram():
-    if not os.getenv("TELEGRAM_TOKEN"): print("[MAIN] TELEGRAM_TOKEN not set — skipping"); return
-    try: from bots.telegram_bot import run_telegram_bot; run_telegram_bot()
-    except Exception as e: print(f"[TELEGRAM] {e}")
+    if not os.getenv("TELEGRAM_TOKEN"):
+        logger.info("[MAIN] TELEGRAM_TOKEN not set — skipping Telegram bot")
+        return
+    try:
+        from bots.telegram_bot import run_telegram_bot
+        run_telegram_bot()
+    except Exception as e:
+        logger.error(f"[TELEGRAM] Fatal bot error: {e}")
+        raise
 
 def start_discord():
-    if not os.getenv("DISCORD_TOKEN"): print("[MAIN] DISCORD_TOKEN not set — skipping"); return
-    try: from bots.discord_bot import run_discord_bot; run_discord_bot()
-    except Exception as e: print(f"[DISCORD] {e}")
+    if not os.getenv("DISCORD_TOKEN"):
+        logger.info("[MAIN] DISCORD_TOKEN not set — skipping Discord bot")
+        return
+    try:
+        from bots.discord_bot import run_discord_bot
+        run_discord_bot()
+    except Exception as e:
+        logger.error(f"[DISCORD] Fatal bot error: {e}")
+        raise
+
+def bot_restart_loop(name: str, start_fn):
+    import time
+    consecutive_failures = 0
+    while True:
+        try:
+            logger.info(f"[{name}] Launching bot...")
+            start_fn()
+            logger.info(f"[{name}] Bot exited cleanly.")
+            break
+        except Exception as e:
+            consecutive_failures += 1
+            delay = min(5 * consecutive_failures, 60)
+            logger.error(f"[{name}] Bot thread crashed with error: {e}. Restarting in {delay}s...")
+            time.sleep(delay)
 
 if __name__ == "__main__":
     logger.info(BANNER)
+    # Ensure memory directory exists
+    Path("memory").mkdir(parents=True, exist_ok=True)
     validate_environment()
 
     for name, fn in [("Telegram", start_telegram), ("Discord", start_discord)]:
-        t = threading.Thread(target=fn, name=name, daemon=True)
+        t = threading.Thread(target=bot_restart_loop, args=(name, fn), name=name, daemon=True)
         t.start()
     logger.info("[MAIN] API starting on http://localhost:8000")
-    start_fastapi()
+    try:
+        start_fastapi()
+    except Exception as e:
+        logger.critical(f"[MAIN] FastAPI API failed to start or crashed: {e}")
+        sys.exit(1)

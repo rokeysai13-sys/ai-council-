@@ -121,6 +121,13 @@ tr:hover td{background:rgba(255,255,255,.02);cursor:pointer}
       </tbody>
     </table>
   </div>
+  
+  <!-- PAGINATION CONTROLS -->
+  <div class="pagination-controls" style="display:flex;align-items:center;justify-content:center;gap:16px;margin-top:20px;margin-bottom:40px;">
+    <button id="prev-btn" class="filter-btn" onclick="prevPage()">◀ Previous</button>
+    <span id="page-indicator" style="font-size:12px;color:var(--txt);">Page 1</span>
+    <button id="next-btn" class="filter-btn" onclick="nextPage()">Next ▶</button>
+  </div>
 </div>
 
 <!-- MODAL -->
@@ -136,9 +143,11 @@ tr:hover td{background:rgba(255,255,255,.02);cursor:pointer}
 </div>
 
 <script>
-const API = 'http://127.0.0.1:8000';
+const API = window.location.protocol.startsWith('http') ? window.location.origin : 'http://127.0.0.1:8000';
 let allData = [];
 let currentFilter = 'all';
+let currentPage = 1;
+const limit = 20;
 
 async function loadStats() {
   try {
@@ -151,14 +160,16 @@ async function loadStats() {
   } catch(e) { console.error(e) }
 }
 
-async function loadConversations(agent=null) {
+async function loadConversations(agent=null, page=1) {
+  currentPage = page;
   try {
     const url = agent && agent !== 'all'
-      ? `${API}/db/conversations?limit=200&agent=${agent}`
-      : `${API}/db/conversations?limit=200`;
+      ? `${API}/db/conversations?limit=${limit}&page=${page}&agent=${agent}`
+      : `${API}/db/conversations?limit=${limit}&page=${page}`;
     const r = await fetch(url);
     allData = await r.json();
     renderTable(allData);
+    renderPaginationControls();
   } catch(e) {
     document.getElementById('tbody').innerHTML = `<tr><td colspan="6" class="empty-state">Cannot connect to server</td></tr>`;
   }
@@ -195,7 +206,7 @@ function esc(s) {
 async function del(id) {
   if(!confirm('Delete this conversation?')) return;
   await fetch(`${API}/db/conversations/${id}`, {method:'DELETE'});
-  loadConversations(currentFilter);
+  loadConversations(currentFilter, currentPage);
   loadStats();
 }
 
@@ -203,18 +214,54 @@ function filter(agent, btn) {
   currentFilter = agent;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  loadConversations(agent);
+  loadConversations(agent, 1);
 }
 
 let searchTimer;
-function doSearch(q) {
+defSearch = (q) => {
   clearTimeout(searchTimer);
-  if(!q.trim()) { renderTable(allData); return; }
+  if(!q.trim()) { loadConversations(currentFilter, currentPage); return; }
   searchTimer = setTimeout(async () => {
     const r = await fetch(`${API}/db/search?q=${encodeURIComponent(q)}`);
     const data = await r.json();
     renderTable(data);
+    // Hide pagination controls during search results
+    document.getElementById('prev-btn').style.display = 'none';
+    document.getElementById('next-btn').style.display = 'none';
+    document.getElementById('page-indicator').textContent = 'Search results';
   }, 300);
+}
+
+// Bind search input to the handler
+document.getElementById('search').oninput = function() { defSearch(this.value); };
+
+function prevPage() {
+  if (currentPage > 1) {
+    loadConversations(currentFilter, currentPage - 1);
+  }
+}
+
+function nextPage() {
+  if (allData.length === limit) {
+    loadConversations(currentFilter, currentPage + 1);
+  }
+}
+
+function renderPaginationControls() {
+  document.getElementById('prev-btn').style.display = 'inline-block';
+  document.getElementById('next-btn').style.display = 'inline-block';
+  document.getElementById('page-indicator').textContent = `Page ${currentPage}`;
+  
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  
+  prevBtn.disabled = currentPage === 1;
+  prevBtn.style.opacity = currentPage === 1 ? '0.4' : '1';
+  prevBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
+  
+  nextBtn.disabled = allData.length < limit;
+  nextBtn.style.opacity = allData.length < limit ? '0.4' : '1';
+  nextBtn.style.cursor = allData.length < limit ? 'not-allowed' : 'pointer';
 }
 
 async function openModal(id) {
@@ -257,7 +304,7 @@ function closeModal(e) {
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal() });
 
 loadStats();
-loadConversations();
+loadConversations(currentFilter, 1);
 </script>
 </body>
 </html>
