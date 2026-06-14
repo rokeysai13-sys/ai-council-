@@ -26,3 +26,4 @@ ollama
 pypdf
 prometheus-client
 bcrypt
+python-dotenv
