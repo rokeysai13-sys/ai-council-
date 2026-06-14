@@ -41,6 +41,19 @@ You: {{"tool": "web_search", "args": {{"query": "latest AI news 2026"}}}}
 # Resolve base_dir once at module level
 _BASE_DIR = str(Path(__file__).parent.parent.resolve()).replace("\\", "/")
 
+def _get_agent_memory(message: str, session_id: str = None) -> str:
+    """Retrieve both semantic memory and raw flat memory file snapshot."""
+    raw_mem = memory_read().get("result", "")[:800]
+    try:
+        from core.rag import build_rag_prompt
+        # Retrieve context from ChromaDB (with empty base prompt)
+        semantic_context = build_rag_prompt(message, "", session_id).strip()
+        if semantic_context:
+            return f"{semantic_context}\n\n## Raw memory/MEMORY.md Snapshot\n{raw_mem}"
+    except Exception as e:
+        logger.warning(f"Failed to retrieve semantic memory in agent: {e}")
+    return raw_mem
+
 def run_agent(message: str, model: str = None, session_id: str = None) -> dict:
     model = model or DEFAULT_MODEL()
     
@@ -150,7 +163,9 @@ def run_agent(message: str, model: str = None, session_id: str = None) -> dict:
         return {"response": response_text, "project": project_dict, "mission_id": mission.mission_id, "step_result": step_res}
 
     soul   = soul_read().get("result", "")[:600]
-    memory = memory_read().get("result", "")[:800]
+    
+    # Retrieve semantic context and fallback raw snapshot
+    memory = _get_agent_memory(message, session_id)[:1200]
     tools  = tools_manifest()
 
     complex_keywords = ["research", "analyze", "investigate", "compare",
@@ -160,7 +175,7 @@ def run_agent(message: str, model: str = None, session_id: str = None) -> dict:
                   or len(message) > 400)
 
     if is_complex:
-        return run_full_pipeline(message, model)
+        return run_full_pipeline(message, model, session_id)
 
     return run_tool_loop(message, model, soul, memory, tools)
 
@@ -299,7 +314,7 @@ def _summarize_result(result: dict) -> str:
 
 # ── Full pipeline ─────────────────────────────────────────────────────────────
 
-def run_full_pipeline(message: str, model: str = DEFAULT_MODEL) -> dict:
+def run_full_pipeline(message: str, model: str = DEFAULT_MODEL, session_id: str = None) -> dict:
     from .planner import decompose, format_plan_md
     from .subagents import orchestrate, analyst_agent, writer_agent
 
@@ -308,7 +323,7 @@ def run_full_pipeline(message: str, model: str = DEFAULT_MODEL) -> dict:
 
     if not plan.get("success"):
         soul   = soul_read().get("result", "")[:600]
-        memory = memory_read().get("result", "")[:600]
+        memory = _get_agent_memory(message, session_id)[:1200]
         return run_tool_loop(message, model, soul, memory, tools_manifest())
 
     orch = orchestrate(plan)

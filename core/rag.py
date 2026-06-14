@@ -5,11 +5,14 @@ Injects relevant docs/memory into prompts before LLM call.
 import re
 from pathlib import Path
 
+from core.logger import logger
+
 def build_rag_prompt(query: str, base_prompt: str, session_id: str = None) -> str:
     """
     Build an enriched prompt by retrieving relevant context.
     Returns enhanced prompt with injected context.
     """
+    logger.info(f"[RAG] Building prompt for query: '{query[:100]}' (session: {session_id})")
     context_blocks = []
 
     # 1. Search vector memory for relevant docs
@@ -26,6 +29,11 @@ def build_rag_prompt(query: str, base_prompt: str, session_id: str = None) -> st
             )
             if doc_texts:
                 context_blocks.append(f"## Relevant Knowledge\n{doc_texts}")
+                logger.info(f"[RAG] Injected {len(docs['results'])} document chunks.")
+            else:
+                logger.info(f"[RAG] Found document results but none met distance threshold (<0.7). Distances: {[r.get('distance') for r in docs['results']]}")
+        else:
+            logger.info("[RAG] No relevant documents found.")
 
         # Relevant past memories
         mems = search_memory(query, n_results=3, collection="memories")
@@ -37,11 +45,17 @@ def build_rag_prompt(query: str, base_prompt: str, session_id: str = None) -> st
             )
             if mem_texts:
                 context_blocks.append(f"## Relevant Memory\n{mem_texts}")
+                logger.info(f"[RAG] Injected {len(mems['results'])} memories.")
+            else:
+                logger.info(f"[RAG] Found memories but none met distance threshold (<0.6). Distances: {[r.get('distance') for r in mems['results']]}")
+        else:
+            logger.info("[RAG] No relevant memories found.")
 
         # User preferences
         prefs = get_user_preferences(query)
         if prefs:
             context_blocks.append(f"## User Preferences\n" + "\n".join(f"- {p}" for p in prefs[:3]))
+            logger.info(f"[RAG] Injected {len(prefs[:3])} user preferences.")
 
         # Session conversation context
         if session_id:
@@ -53,15 +67,19 @@ def build_rag_prompt(query: str, base_prompt: str, session_id: str = None) -> st
                     for r in history["results"]
                 )
                 context_blocks.append(f"## Recent Conversation\n{hist_text}")
+                logger.info(f"[RAG] Injected {len(history['results'])} historical conversation turns.")
 
     except Exception as e:
+        logger.error(f"[RAG] Error during memory retrieval: {e}", exc_info=True)
         context_blocks.append(f"## Note\nMemory retrieval unavailable: {e}")
 
     # 2. Build enriched prompt
     if not context_blocks:
+        logger.info("[RAG] No context injected (empty context blocks).")
         return base_prompt
 
     context_str = "\n\n".join(context_blocks)
+    logger.info(f"[RAG] Success. Built prompt with context length: {len(context_str)}")
     return f"""{context_str}
 
 ---
@@ -132,7 +150,7 @@ def ingest_directory(dir_path: str, extensions: list = None) -> dict:
     return {**results, "success": True}
 
 
-# ── Text chunking ─────────────────────────────────────────────────────────────
+# Text chunking
 def _semantic_chunk_text(text: str, max_chunk_size: int = 1500) -> list:
     """
     Intelligently splits text on semantic boundaries (markdown headers, paragraphs, then sentences).

@@ -279,7 +279,7 @@ def chat_agent(req: ChatReq, auth=Depends(verify_api_key)):
         return result
 
     if req.stream:
-        return _stream_response(req.message, req.model)
+        return _stream_response(req.message, req.model, req.session_id)
 
     # Cache check
     cache_key = f"agent:{req.message[:100]}"
@@ -308,18 +308,22 @@ def chat_agent(req: ChatReq, auth=Depends(verify_api_key)):
     _cache_set(cache_key, result)
     return result
 
-def _stream_response(message: str, model: str = None):
+def _stream_response(message: str, model: str = None, session_id: str = "default"):
     """Stream tokens as Server-Sent Events asynchronously without blocking the event loop."""
     import asyncio
     import json
     from core.retry import ollama_stream
     from config.loader import MODEL_FALLBACK
+    from core.rag import build_rag_prompt
+
+    # RAG-enhanced prompt for the streaming generator
+    enhanced_prompt = build_rag_prompt(message, message, session_id)
 
     async def generate():
         yield f"data: {json.dumps({'type':'start'})}\n\n"
         full_response = ""
         
-        sync_gen = ollama_stream(message, model=model or MODEL_FALLBACK())
+        sync_gen = ollama_stream(enhanced_prompt, model=model or MODEL_FALLBACK())
         loop = asyncio.get_event_loop()
         
         def get_next():
@@ -341,6 +345,15 @@ def _stream_response(message: str, model: str = None):
             yield f"data: {json.dumps({'type':'token','text':token})}\n\n"
             
         yield f"data: {json.dumps({'type':'done','full':full_response})}\n\n"
+
+        # Log conversation turns and episodic memories on completion
+        try:
+            from memory.vector_store import store_conversation, add_episodic_memory
+            store_conversation(session_id, "user", message)
+            store_conversation(session_id, "assistant", full_response)
+            add_episodic_memory("master", message, full_response)
+        except Exception as e:
+            logger.error(f"[STREAM MEMORY] Failed to save conversation/episodic memory: {e}")
 
     return StreamingResponse(generate(), media_type="text/event-stream")
 

@@ -241,6 +241,22 @@ def ollama_status():
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+def vector_search(query, n_results=5, collection="memories"):
+    """Search the vector database (collections: memories, conversations, documents, preferences) for semantically similar items."""
+    try:
+        from memory.vector_store import search_memory
+        return search_memory(query, n_results=int(n_results), collection=collection)
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+def vector_store(text, collection="memories", metadata=None):
+    """Store a text entry in the vector database with optional metadata."""
+    try:
+        from memory.vector_store import store_memory
+        return store_memory(text, metadata=metadata, collection=collection)
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
 # ── Tool Registry ─────────────────────────────────────────────────────────────
 TOOLS = {
     "file_read":      (file_read,      ["path"],            "Read a file"),
@@ -268,6 +284,8 @@ TOOLS = {
     "browser_screenshot": (browser_screenshot, ["url", "save_path"], "Take a screenshot of a webpage and save it"),
     "gmail_read":      (gmail_read_inbox, ["max_results"],     "Read the most recent emails from Gmail inbox"),
     "calendar_events": (calendar_upcoming, ["days"],           "Get upcoming calendar events for the next N days"),
+    "vector_search":  (vector_search,  ["query", "n_results", "collection"], "Search semantic memory database"),
+    "vector_store":   (vector_store,   ["text", "collection", "metadata"],  "Store entry in semantic memory database"),
 }
 
 # ── Skills Hub Auto-Loader ────────────────────────────────────────────────────
