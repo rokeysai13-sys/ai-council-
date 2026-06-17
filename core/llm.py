@@ -3,16 +3,57 @@ import requests
 import json
 import os
 import hashlib
+import threading
 from config.loader import cfg
+
+# Thread-local storage for active mission tracking
+_local_state = threading.local()
+
+def set_active_mission_id(mission_id: str):
+    _local_state.mission_id = mission_id
+
+def get_active_mission_id() -> str:
+    return getattr(_local_state, "mission_id", None)
 
 # Simple in-memory cache for LLM outputs
 _llm_cache = {}
 
 class LlmResponse(str):
+    def __new__(cls, value, prompt_tokens=0, completion_tokens=0, model=""):
+        obj = str.__new__(cls, value)
+        obj.prompt_tokens = prompt_tokens
+        obj.completion_tokens = completion_tokens
+        obj.model = model
+        return obj
+
     def get(self, key, default=None):
         if key == "response":
             return str(self)
+        if key == "prompt_tokens":
+            return self.prompt_tokens
+        if key == "completion_tokens":
+            return self.completion_tokens
+        if key == "model":
+            return self.model
         return default
+
+def _emit_token_usage_if_active(res: LlmResponse):
+    mission_id = get_active_mission_id()
+    if mission_id:
+        try:
+            from core.event_store import event_store
+            event_store.emit(
+                "agent.llm_usage", 
+                "system", 
+                {
+                    "tokens_in": res.prompt_tokens,
+                    "tokens_out": res.completion_tokens,
+                    "model": res.model
+                },
+                mission_id=mission_id
+            )
+        except Exception as e:
+            logger.warning(f"[LLM] Failed to emit LLM token usage: {e}")
 
 def _get_cache_key(model: str, system: str, prompt: str, options: dict) -> str:
     key_src = f"{model}:{system}:{prompt}:{json.dumps(options or {}, sort_keys=True)}"
@@ -51,18 +92,39 @@ def llm_generate(prompt: str, model: str = None, system: str = "", stream: bool 
     if cache_enabled and cache_key in _llm_cache:
         logger.info(f"[LLM CACHE] Hit for model '{model}'")
         cached_val = _llm_cache[cache_key]
-        return LlmResponse(cached_val.get("response", ""))
+        res_val = LlmResponse(
+            cached_val.get("response", ""),
+            prompt_tokens=cached_val.get("prompt_tokens", 0),
+            completion_tokens=cached_val.get("completion_tokens", 0),
+            model=cached_val.get("model", model)
+        )
+        _emit_token_usage_if_active(res_val)
+        return res_val
         
     if is_openai:
         result = _call_openai(model, system, prompt, options, timeout)
         if cache_enabled and "response" in result:
             _llm_cache[cache_key] = result
-        return LlmResponse(result.get("response", ""))
+        res_val = LlmResponse(
+            result.get("response", ""),
+            prompt_tokens=result.get("prompt_tokens", 0),
+            completion_tokens=result.get("completion_tokens", 0),
+            model=result.get("model", model)
+        )
+        _emit_token_usage_if_active(res_val)
+        return res_val
     elif is_gemini:
         result = _call_gemini(model, system, prompt, options, timeout)
         if cache_enabled and "response" in result:
             _llm_cache[cache_key] = result
-        return LlmResponse(result.get("response", ""))
+        res_val = LlmResponse(
+            result.get("response", ""),
+            prompt_tokens=result.get("prompt_tokens", 0),
+            completion_tokens=result.get("completion_tokens", 0),
+            model=result.get("model", model)
+        )
+        _emit_token_usage_if_active(res_val)
+        return res_val
         
     # Default to Ollama (Local)
     ollama_url = cfg("models", "ollama_url", default="http://localhost:11434") + "/api/generate"
@@ -84,7 +146,7 @@ def llm_generate(prompt: str, model: str = None, system: str = "", stream: bool 
                 fallback = non_embed[0] if non_embed else available[0]
                 logger.info(f"[LLM] Model '{model}' not found. Routing to fallback local model: '{fallback}'")
                 model = fallback
-
+ 
     try:
         r = requests.post(ollama_url, json={
             "model": model,
@@ -96,11 +158,22 @@ def llm_generate(prompt: str, model: str = None, system: str = "", stream: bool 
         r.raise_for_status()
         result = r.json()
         
+        prompt_tokens = result.get("prompt_eval_count", 0)
+        completion_tokens = result.get("eval_count", 0)
+        resp_text = result.get("response", "")
+        
         # Save cache
-        if cache_enabled and "response" in result:
-            _llm_cache[cache_key] = result
+        if cache_enabled:
+            _llm_cache[cache_key] = {
+                "response": resp_text,
+                "prompt_tokens": prompt_tokens,
+                "completion_tokens": completion_tokens,
+                "model": model
+            }
             
-        return LlmResponse(result.get("response", ""))
+        res_val = LlmResponse(resp_text, prompt_tokens=prompt_tokens, completion_tokens=completion_tokens, model=model)
+        _emit_token_usage_if_active(res_val)
+        return res_val
     except requests.exceptions.RequestException as e:
         # Fallback to cloud if Ollama fails and fallback is enabled
         fallback_model = cfg("models", "cloud_fallback_model", default="")
@@ -108,10 +181,24 @@ def llm_generate(prompt: str, model: str = None, system: str = "", stream: bool 
             logger.error(f"[LLM] Ollama failed ({e}), falling back to {fallback_model}")
             if fallback_model.startswith("gpt-"):
                 res_val = _call_openai(fallback_model, system, prompt, options, timeout)
-                return LlmResponse(res_val.get("response", ""))
+                res_obj = LlmResponse(
+                    res_val.get("response", ""),
+                    prompt_tokens=res_val.get("prompt_tokens", 0),
+                    completion_tokens=res_val.get("completion_tokens", 0),
+                    model=res_val.get("model", fallback_model)
+                )
+                _emit_token_usage_if_active(res_obj)
+                return res_obj
             elif fallback_model.startswith("gemini-"):
                 res_val = _call_gemini(fallback_model, system, prompt, options, timeout)
-                return LlmResponse(res_val.get("response", ""))
+                res_obj = LlmResponse(
+                    res_val.get("response", ""),
+                    prompt_tokens=res_val.get("prompt_tokens", 0),
+                    completion_tokens=res_val.get("completion_tokens", 0),
+                    model=res_val.get("model", fallback_model)
+                )
+                _emit_token_usage_if_active(res_obj)
+                return res_obj
         raise Exception(f"Ollama request failed and no fallback available: {e}")
 
 def _call_openai(model: str, system: str, prompt: str, options: dict, timeout: int) -> dict:
@@ -144,7 +231,14 @@ def _call_openai(model: str, system: str, prompt: str, options: dict, timeout: i
     resp = r.json()
     
     content = resp["choices"][0]["message"]["content"]
-    return {"response": content}
+    prompt_tokens = resp.get("usage", {}).get("prompt_tokens", 0)
+    completion_tokens = resp.get("usage", {}).get("completion_tokens", 0)
+    return {
+        "response": content,
+        "prompt_tokens": prompt_tokens,
+        "completion_tokens": completion_tokens,
+        "model": resp.get("model", model)
+    }
 
 def _call_gemini(model: str, system: str, prompt: str, options: dict, timeout: int) -> dict:
     api_key = cfg("api_keys", "gemini", default=os.getenv("GEMINI_API_KEY"))
@@ -179,6 +273,14 @@ def _call_gemini(model: str, system: str, prompt: str, options: dict, timeout: i
     
     try:
         content = resp["candidates"][0]["content"]["parts"][0]["text"]
-        return {"response": content}
     except (KeyError, IndexError):
-        return {"response": ""}
+        content = ""
+        
+    prompt_tokens = resp.get("usageMetadata", {}).get("promptTokenCount", 0)
+    completion_tokens = resp.get("usageMetadata", {}).get("candidatesTokenCount", 0)
+    return {
+        "response": content,
+        "prompt_tokens": prompt_tokens,
+        "completion_tokens": completion_tokens,
+        "model": model
+    }

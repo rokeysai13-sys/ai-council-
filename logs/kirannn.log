@@ -6561,3 +6561,759 @@ telegram.error.TimedOut: Timed out
 2026-06-15 19:27:43,541 [WARNING] apscheduler.executors.default: Run time of job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-15 19:42:23 IST)" was missed by 0:00:20.171775
 2026-06-15 19:27:43,556 [WARNING] apscheduler.executors.default: Run time of job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-15 20:12:23 IST)" was missed by 0:15:20.186525
 2026-06-15 19:27:43,556 [WARNING] apscheduler.executors.default: Run time of job "morning_brief_task (trigger: cron[hour='8', minute='0'], next run at: 2026-06-16 08:00:00 IST)" was missed by 11:27:43.556391
+2026-06-16 22:20:28,879 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-16 22:20:28,889 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-16 22:20:28,890 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-16 22:20:28,891 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-16 22:20:28,903 [INFO] apscheduler.scheduler: Added job "morning_brief_task" to job store "default"
+2026-06-16 22:20:28,904 [INFO] apscheduler.scheduler: Added job "health_check_task" to job store "default"
+2026-06-16 22:20:28,904 [INFO] apscheduler.scheduler: Added job "memory_cleanup_task" to job store "default"
+2026-06-16 22:20:28,905 [INFO] apscheduler.scheduler: Added job "run_pending_scheduled_tasks" to job store "default"
+2026-06-16 22:20:28,905 [INFO] apscheduler.scheduler: Scheduler started
+2026-06-16 22:21:41,975 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-16 22:21:41,980 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-16 22:21:41,981 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-16 22:21:41,981 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-16 22:21:41,984 [INFO] apscheduler.scheduler: Added job "morning_brief_task" to job store "default"
+2026-06-16 22:21:41,985 [INFO] apscheduler.scheduler: Added job "health_check_task" to job store "default"
+2026-06-16 22:21:41,986 [INFO] apscheduler.scheduler: Added job "memory_cleanup_task" to job store "default"
+2026-06-16 22:21:41,987 [INFO] apscheduler.scheduler: Added job "run_pending_scheduled_tasks" to job store "default"
+2026-06-16 22:21:41,987 [INFO] apscheduler.scheduler: Scheduler started
+2026-06-16 22:21:51,985 [ERROR] telegram.ext: Network Retry Loop (Bootstrap Initialize Application): Timed out: Timed out. Failed run number 0 of 0. Aborting.
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 394, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        pool_request.request
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection.py", line 101, in handle_async_request
+    raise exc
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection.py", line 78, in handle_async_request
+    stream = await self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection.py", line 124, in _connect
+    stream = await self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_backends\auto.py", line 31, in connect_tcp
+    return await self._backend.connect_tcp(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_backends\anyio.py", line 113, in connect_tcp
+    with map_exceptions(exc_map):
+         ~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_httpxrequest.py", line 279, in do_request
+    res = await self._client.request(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 393, in handle_async_request
+    with map_httpcore_exceptions():
+         ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_utils\networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_utils\networkloop.py", line 136, in do_action
+    await action_cb()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_application.py", line 489, in initialize
+    await self.bot.initialize()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 316, in initialize
+    await super().initialize()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 857, in initialize
+    await self.get_me()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 2008, in get_me
+    return await super().get_me(
+           ^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 990, in get_me
+    result = await self._post(
+             ^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 305, in _request_wrapper
+    code, payload = await self.do_request(
+                    ^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_httpxrequest.py", line 296, in do_request
+    raise TimedOut from err
+telegram.error.TimedOut: Timed out
+2026-06-16 22:35:28,899 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-16 22:50:28 IST)" (scheduled at 2026-06-16 22:35:28.890462+05:30)
+2026-06-16 22:35:28,902 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-16 22:50:28 IST)" executed successfully
+2026-06-16 22:36:41,990 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-16 22:51:41 IST)" (scheduled at 2026-06-16 22:36:41.981375+05:30)
+2026-06-16 22:36:41,993 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-16 22:51:41 IST)" executed successfully
+2026-06-17 01:43:29,484 [WARNING] apscheduler.executors.default: Run time of job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 01:51:41 IST)" was missed by 0:06:47.502954
+2026-06-17 01:43:29,484 [WARNING] apscheduler.executors.default: Run time of job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 01:50:28 IST)" was missed by 0:08:00.593853
+2026-06-17 01:43:29,484 [WARNING] apscheduler.executors.default: Run time of job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-17 02:21:41 IST)" was missed by 0:21:47.504924
+2026-06-17 01:43:29,484 [WARNING] apscheduler.executors.default: Run time of job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-17 02:20:28 IST)" was missed by 0:23:00.596185
+2026-06-17 01:43:29,484 [WARNING] apscheduler.executors.default: Run time of job "memory_cleanup_task (trigger: cron[hour='0', minute='0'], next run at: 2026-06-18 00:00:00 IST)" was missed by 1:43:29.484855
+2026-06-17 01:43:29,485 [WARNING] apscheduler.executors.default: Run time of job "memory_cleanup_task (trigger: cron[hour='0', minute='0'], next run at: 2026-06-18 00:00:00 IST)" was missed by 1:43:29.485031
+2026-06-17 20:14:11,513 [WARNING] apscheduler.executors.default: Run time of job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 20:20:28 IST)" was missed by 0:08:42.623164
+2026-06-17 20:14:11,514 [WARNING] apscheduler.executors.default: Run time of job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-17 20:20:28 IST)" was missed by 0:53:42.625438
+2026-06-17 20:14:11,514 [WARNING] apscheduler.executors.default: Run time of job "morning_brief_task (trigger: cron[hour='8', minute='0'], next run at: 2026-06-18 08:00:00 IST)" was missed by 12:14:11.514263
+026-06-17 20:14:11,516 [WARNING] apscheduler.executors.default: Run time of job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-17 20:21:41 IST)" was missed by 0:52:29.536762
+2026-06-17 20:14:11,578 [WARNING] apscheduler.executors.default: Run time of job "morning_brief_task (trigger: cron[hour='8', minute='0'], next run at: 2026-06-18 08:00:00 IST)" was missed by 12:14:11.578304
+2026-06-17 20:20:28,900 [INFO] apscheduler.executors.default: Running job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-17 21:20:28 IST)" (scheduled at 2026-06-17 20:20:28.888616+05:30)
+2026-06-17 20:20:28,901 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 20:35:28 IST)" (scheduled at 2026-06-17 20:20:28.890462+05:30)
+2026-06-17 20:20:28,910 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 20:35:28 IST)" executed successfully
+2026-06-17 20:20:36,377 [INFO] apscheduler.executors.default: Job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-17 21:20:28 IST)" executed successfully
+2026-06-17 20:21:41,982 [INFO] apscheduler.executors.default: Running job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-17 21:21:41 IST)" (scheduled at 2026-06-17 20:21:41.979752+05:30)
+2026-06-17 20:21:42,024 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 20:36:41 IST)" (scheduled at 2026-06-17 20:21:41.981375+05:30)
+2026-06-17 20:21:42,150 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 20:36:41 IST)" executed successfully
+2026-06-17 20:21:51,627 [INFO] apscheduler.executors.default: Job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-17 21:21:41 IST)" executed successfully
+2026-06-17 20:35:28,892 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 20:50:28 IST)" (scheduled at 2026-06-17 20:35:28.890462+05:30)
+2026-06-17 20:35:28,911 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 20:50:28 IST)" executed successfully
+2026-06-17 20:36:42,213 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 20:51:41 IST)" (scheduled at 2026-06-17 20:36:41.981375+05:30)
+2026-06-17 20:36:42,462 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 20:51:41 IST)" executed successfully
+2026-06-17 20:44:39,811 [ERROR] asyncio: ConnectionClosedError exception in shielded future
+future: <Future finished exception=ConnectionClosedError(None, Close(code=<CloseCode.INTERNAL_ERROR: 1011>, reason='keepalive ping timeout'), None)>
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 1276, in close_connection
+    await self.transfer_data_task
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 940, in transfer_data
+    message = await self.read_message()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 1010, in read_message
+    frame = await self.read_data_frame(max_size=self.max_size)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 1087, in read_data_frame
+    frame = await self.read_frame(max_size)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 1144, in read_frame
+    frame = await Frame.read(
+            ^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\framing.py", line 70, in read
+    data = await reader(2)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\asyncio\streams.py", line 769, in readexactly
+    await self._wait_for_data('readexactly')
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\asyncio\streams.py", line 539, in _wait_for_data
+    await self._waiter
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+websockets.exceptions.ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received
+2026-06-17 20:50:28,981 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 21:05:28 IST)" (scheduled at 2026-06-17 20:50:28.890462+05:30)
+2026-06-17 20:50:28,983 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 21:05:28 IST)" executed successfully
+2026-06-17 21:18:00,599 [WARNING] apscheduler.executors.default: Run time of job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 21:21:41 IST)" was missed by 0:11:18.617641
+2026-06-17 21:18:00,599 [WARNING] apscheduler.executors.default: Run time of job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 21:20:28 IST)" was missed by 0:12:31.709049
+2026-06-17 21:20:28,894 [INFO] apscheduler.executors.default: Running job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-17 22:20:28 IST)" (scheduled at 2026-06-17 21:20:28.888616+05:30)
+2026-06-17 21:20:28,901 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 21:35:28 IST)" (scheduled at 2026-06-17 21:20:28.890462+05:30)
+2026-06-17 21:20:28,919 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 21:35:28 IST)" executed successfully
+2026-06-17 21:20:35,118 [INFO] apscheduler.executors.default: Job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-17 22:20:28 IST)" executed successfully
+2026-06-17 21:21:41,986 [INFO] apscheduler.executors.default: Running job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-17 22:21:41 IST)" (scheduled at 2026-06-17 21:21:41.979752+05:30)
+2026-06-17 21:21:41,988 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 21:36:41 IST)" (scheduled at 2026-06-17 21:21:41.981375+05:30)
+2026-06-17 21:21:41,997 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 21:36:41 IST)" executed successfully
+2026-06-17 21:21:48,166 [INFO] apscheduler.executors.default: Job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-17 22:21:41 IST)" executed successfully
+2026-06-17 21:35:28,921 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 21:50:28 IST)" (scheduled at 2026-06-17 21:35:28.890462+05:30)
+2026-06-17 21:35:28,951 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 21:50:28 IST)" executed successfully
+2026-06-17 21:36:41,992 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 21:51:41 IST)" (scheduled at 2026-06-17 21:36:41.981375+05:30)
+2026-06-17 21:36:41,995 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 21:51:41 IST)" executed successfully
+2026-06-17 21:42:27,670 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 21:42:27,676 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 21:42:27,677 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 21:42:27,677 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 21:42:27,685 [INFO] apscheduler.scheduler: Added job "morning_brief_task" to job store "default"
+2026-06-17 21:42:27,686 [INFO] apscheduler.scheduler: Added job "health_check_task" to job store "default"
+2026-06-17 21:42:27,686 [INFO] apscheduler.scheduler: Added job "memory_cleanup_task" to job store "default"
+2026-06-17 21:42:27,686 [INFO] apscheduler.scheduler: Added job "run_pending_scheduled_tasks" to job store "default"
+2026-06-17 21:42:27,686 [INFO] apscheduler.scheduler: Scheduler started
+2026-06-17 21:43:17,533 [ERROR] asyncio: ConnectionClosedError exception in shielded future
+future: <Future finished exception=ConnectionClosedError(None, Close(code=<CloseCode.INTERNAL_ERROR: 1011>, reason='keepalive ping timeout'), None)>
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 1276, in close_connection
+    await self.transfer_data_task
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 940, in transfer_data
+    message = await self.read_message()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 1010, in read_message
+    frame = await self.read_data_frame(max_size=self.max_size)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 1087, in read_data_frame
+    frame = await self.read_frame(max_size)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 1144, in read_frame
+    frame = await Frame.read(
+            ^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\framing.py", line 70, in read
+    data = await reader(2)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\asyncio\streams.py", line 769, in readexactly
+    await self._wait_for_data('readexactly')
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\asyncio\streams.py", line 539, in _wait_for_data
+    await self._waiter
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+websockets.exceptions.ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received
+2026-06-17 21:43:42,987 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 21:43:42,993 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 21:43:42,994 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 21:43:42,995 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 21:43:43,008 [INFO] apscheduler.scheduler: Added job "morning_brief_task" to job store "default"
+2026-06-17 21:43:43,009 [INFO] apscheduler.scheduler: Added job "health_check_task" to job store "default"
+2026-06-17 21:43:43,013 [INFO] apscheduler.scheduler: Added job "memory_cleanup_task" to job store "default"
+2026-06-17 21:43:43,016 [INFO] apscheduler.scheduler: Added job "run_pending_scheduled_tasks" to job store "default"
+2026-06-17 21:43:43,016 [INFO] apscheduler.scheduler: Scheduler started
+2026-06-17 21:43:53,542 [ERROR] telegram.ext: Network Retry Loop (Bootstrap Initialize Application): Timed out: Timed out. Failed run number 0 of 0. Aborting.
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 394, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        pool_request.request
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection.py", line 101, in handle_async_request
+    raise exc
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection.py", line 78, in handle_async_request
+    stream = await self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection.py", line 124, in _connect
+    stream = await self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_backends\auto.py", line 31, in connect_tcp
+    return await self._backend.connect_tcp(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_backends\anyio.py", line 113, in connect_tcp
+    with map_exceptions(exc_map):
+         ~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_httpxrequest.py", line 279, in do_request
+    res = await self._client.request(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 393, in handle_async_request
+    with map_httpcore_exceptions():
+         ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_utils\networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_utils\networkloop.py", line 136, in do_action
+    await action_cb()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_application.py", line 489, in initialize
+    await self.bot.initialize()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 316, in initialize
+    await super().initialize()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 857, in initialize
+    await self.get_me()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 2008, in get_me
+    return await super().get_me(
+           ^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 990, in get_me
+    result = await self._post(
+             ^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 305, in _request_wrapper
+    code, payload = await self.do_request(
+                    ^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_httpxrequest.py", line 296, in do_request
+    raise TimedOut from err
+telegram.error.TimedOut: Timed out
+2026-06-17 21:43:59,849 [ERROR] asyncio: ConnectionClosedError exception in shielded future
+future: <Future finished exception=ConnectionClosedError(None, Close(code=<CloseCode.INTERNAL_ERROR: 1011>, reason='keepalive ping timeout'), None)>
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 1276, in close_connection
+    await self.transfer_data_task
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 940, in transfer_data
+    message = await self.read_message()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 1010, in read_message
+    frame = await self.read_data_frame(max_size=self.max_size)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 1087, in read_data_frame
+    frame = await self.read_frame(max_size)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\protocol.py", line 1144, in read_frame
+    frame = await Frame.read(
+            ^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\websockets\legacy\framing.py", line 70, in read
+    data = await reader(2)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\asyncio\streams.py", line 769, in readexactly
+    await self._wait_for_data('readexactly')
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\asyncio\streams.py", line 539, in _wait_for_data
+    await self._waiter
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+websockets.exceptions.ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received
+2026-06-17 21:45:18,588 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 21:45:18,589 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 21:45:18,590 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 21:45:18,590 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 21:45:18,591 [INFO] apscheduler.scheduler: Added job "morning_brief_task" to job store "default"
+2026-06-17 21:45:18,591 [INFO] apscheduler.scheduler: Added job "health_check_task" to job store "default"
+2026-06-17 21:45:18,591 [INFO] apscheduler.scheduler: Added job "memory_cleanup_task" to job store "default"
+2026-06-17 21:45:18,591 [INFO] apscheduler.scheduler: Added job "run_pending_scheduled_tasks" to job store "default"
+2026-06-17 21:45:18,591 [INFO] apscheduler.scheduler: Scheduler started
+2026-06-17 23:00:20,980 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 23:00:20,989 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 23:00:20,994 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 23:00:21,000 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 23:00:21,003 [INFO] apscheduler.scheduler: Added job "morning_brief_task" to job store "default"
+2026-06-17 23:00:21,005 [INFO] apscheduler.scheduler: Added job "health_check_task" to job store "default"
+2026-06-17 23:00:21,063 [INFO] apscheduler.scheduler: Added job "memory_cleanup_task" to job store "default"
+2026-06-17 23:00:21,096 [INFO] apscheduler.scheduler: Added job "run_pending_scheduled_tasks" to job store "default"
+2026-06-17 23:00:21,107 [INFO] apscheduler.scheduler: Scheduler started
+2026-06-17 23:00:28,706 [ERROR] telegram.ext: Network Retry Loop (Bootstrap Initialize Application): Timed out: Timed out. Failed run number 0 of 0. Aborting.
+Traceback (most recent call last):
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpx\_transports\default.py", line 394, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        pool_request.request
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpcore\_async\connection.py", line 101, in handle_async_request
+    raise exc
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpcore\_async\connection.py", line 78, in handle_async_request
+    stream = await self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpcore\_async\connection.py", line 124, in _connect
+    stream = await self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpcore\_backends\auto.py", line 31, in connect_tcp
+    return await self._backend.connect_tcp(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpcore\_backends\anyio.py", line 113, in connect_tcp
+    with map_exceptions(exc_map):
+         ~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\request\_httpxrequest.py", line 279, in do_request
+    res = await self._client.request(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpx\_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpx\_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpx\_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpx\_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpx\_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpx\_transports\default.py", line 393, in handle_async_request
+    with map_httpcore_exceptions():
+         ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_utils\networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_utils\networkloop.py", line 136, in do_action
+    await action_cb()
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_application.py", line 489, in initialize
+    await self.bot.initialize()
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_extbot.py", line 315, in initialize
+    await super().initialize()
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\_bot.py", line 856, in initialize
+    await self.get_me()
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_extbot.py", line 2007, in get_me
+    return await super().get_me(
+           ^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\_bot.py", line 989, in get_me
+    result = await self._post(
+             ^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\_bot.py", line 703, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_extbot.py", line 369, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\_bot.py", line 732, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\request\_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\request\_baserequest.py", line 305, in _request_wrapper
+    code, payload = await self.do_request(
+                    ^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\request\_httpxrequest.py", line 296, in do_request
+    raise TimedOut from err
+telegram.error.TimedOut: Timed out
+2026-06-17 23:02:37,353 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 23:02:37,356 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 23:02:37,356 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 23:02:37,357 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-17 23:02:37,358 [INFO] apscheduler.scheduler: Added job "morning_brief_task" to job store "default"
+2026-06-17 23:02:37,359 [INFO] apscheduler.scheduler: Added job "health_check_task" to job store "default"
+2026-06-17 23:02:37,359 [INFO] apscheduler.scheduler: Added job "memory_cleanup_task" to job store "default"
+2026-06-17 23:02:37,360 [INFO] apscheduler.scheduler: Added job "run_pending_scheduled_tasks" to job store "default"
+2026-06-17 23:02:37,361 [INFO] apscheduler.scheduler: Scheduler started
+2026-06-17 23:02:42,275 [ERROR] telegram.ext: Network Retry Loop (Bootstrap Initialize Application): Timed out: Timed out. Failed run number 0 of 0. Aborting.
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 394, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        pool_request.request
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection.py", line 101, in handle_async_request
+    raise exc
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection.py", line 78, in handle_async_request
+    stream = await self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection.py", line 124, in _connect
+    stream = await self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_backends\auto.py", line 31, in connect_tcp
+    return await self._backend.connect_tcp(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_backends\anyio.py", line 113, in connect_tcp
+    with map_exceptions(exc_map):
+         ~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_httpxrequest.py", line 279, in do_request
+    res = await self._client.request(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 393, in handle_async_request
+    with map_httpcore_exceptions():
+         ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_utils\networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_utils\networkloop.py", line 136, in do_action
+    await action_cb()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_application.py", line 489, in initialize
+    await self.bot.initialize()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 316, in initialize
+    await super().initialize()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 857, in initialize
+    await self.get_me()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 2008, in get_me
+    return await super().get_me(
+           ^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 990, in get_me
+    result = await self._post(
+             ^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 305, in _request_wrapper
+    code, payload = await self.do_request(
+                    ^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_httpxrequest.py", line 296, in do_request
+    raise TimedOut from err
+telegram.error.TimedOut: Timed out
+2026-06-17 23:15:21,005 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 23:30:21 IST)" (scheduled at 2026-06-17 23:15:21.000250+05:30)
+2026-06-17 23:15:21,006 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-17 23:30:21 IST)" executed successfully

@@ -149,7 +149,7 @@ def security_agent(content: str, context: str = "general") -> dict:
             temp_dir = str(Path(tempfile.gettempdir()).resolve()).replace("\\", "/")
             if temp_dir not in allowed_paths_list:
                 allowed_paths_list.append(temp_dir)
-        except:
+        except Exception:
             pass
 
         # Windows paths
@@ -164,7 +164,7 @@ def security_agent(content: str, context: str = "general") -> dict:
         for p in paths_in_content:
             try:
                 normalized_p = str(Path(p).resolve()).replace("\\", "/")
-            except:
+            except Exception:
                 normalized_p = p.replace("\\", "/")
             if not any(normalized_p.startswith(ap) for ap in allowed_paths_list):
                 path_violation = True

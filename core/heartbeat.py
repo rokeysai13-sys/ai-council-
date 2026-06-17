@@ -18,7 +18,7 @@ def _notify(msg: str):
     logger.info(f"[HEARTBEAT ⏰] {msg}")
     if _notify_fn:
         try: asyncio.create_task(_notify_fn(msg))
-        except: pass
+        except Exception: pass
 
 async def task_morning_brief():
     now = datetime.datetime.now()
@@ -37,7 +37,9 @@ async def task_morning_brief():
         )
         brief = r.json().get("response", "Good morning, Kiran!")
         _notify(f"☀️ Morning Brief:\n{brief}")
-    except: _notify("☀️ Good morning, Kiran! Time to build something great.")
+    except Exception as e:
+        logger.warning(f"Failed to generate morning brief: {e}")
+        _notify("☀️ Good morning, Kiran! Time to build something great.")
 
 async def task_pending():
     mem = (BASE/"memory"/"MEMORY.md")
@@ -58,10 +60,14 @@ async def task_health():
         models = [m["name"] for m in r.json().get("models",[])]
         if not models: issues.append("Ollama: no models loaded")
         else: logger.info(f"[HEARTBEAT] Ollama OK — {len(models)} models")
-    except: issues.append("Ollama offline")
+    except Exception as e:
+        logger.warning(f"Ollama health check failed: {e}")
+        issues.append("Ollama offline")
     # 2. API
     try: await asyncio.to_thread(requests.get, "http://localhost:8000/", timeout=3)
-    except: issues.append("kirannn API offline")
+    except Exception as e:
+        logger.warning(f"API health check failed: {e}")
+        issues.append("kirannn API offline")
     # 3. Redis
     try:
         import redis as _redis
@@ -87,7 +93,8 @@ async def task_health():
             issues.append(f"Disk critically low: {free_gb:.1f} GB free")
         else:
             logger.info(f"[HEARTBEAT] Disk OK — {free_gb:.1f} GB free")
-    except: pass
+    except Exception as e:
+        logger.warning(f"Disk check failed: {e}")
     # 6. Memory system
     try:
         from memory.vector_store import memory_stats

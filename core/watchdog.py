@@ -28,7 +28,7 @@ class Watchdog:
         if self._notify_fn:
             try:
                 await self._notify_fn(msg)
-            except:
+            except Exception:
                 pass
 
     # ── Health checks ─────────────────────────────────────────────────────────
@@ -38,7 +38,8 @@ class Watchdog:
         try:
             r = await asyncio.to_thread(requests.get, "http://localhost:11434/api/tags", timeout=15)
             return r.status_code == 200
-        except:
+        except Exception as e:
+            logger.warning(f"Ollama watchdog check failed: {e}")
             return False
 
     async def check_api(self) -> bool:
@@ -46,7 +47,8 @@ class Watchdog:
         try:
             r = await asyncio.to_thread(requests.get, "http://localhost:8000/health", timeout=15)
             return r.status_code == 200
-        except:
+        except Exception as e:
+            logger.warning(f"API watchdog check failed: {e}")
             return False
 
     async def check_memory(self) -> bool:
@@ -54,7 +56,8 @@ class Watchdog:
             from memory.vector_store import memory_stats
             stats = memory_stats()
             return stats.get("backend") in ["chromadb", "markdown_fallback"]
-        except:
+        except Exception as e:
+            logger.warning(f"Memory watchdog check failed: {e}")
             return False
 
     async def check_disk_space(self) -> bool:
@@ -63,7 +66,8 @@ class Watchdog:
             total, used, free = shutil.disk_usage("/")
             free_gb = free / (1024**3)
             return free_gb > 1.0  # warn if less than 1GB free
-        except:
+        except Exception as e:
+            logger.warning(f"Disk space watchdog check failed: {e}")
             return True
 
     # ── Recovery actions ──────────────────────────────────────────────────────

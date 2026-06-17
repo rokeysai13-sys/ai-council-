@@ -8,6 +8,7 @@ import json, uuid, asyncio, threading
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
+from core.logger import logger
 
 EVENTS_DIR = Path(__file__).parent.parent / "memory" / "events"
 
@@ -58,11 +59,13 @@ class EventStore:
                 asyncio.run_coroutine_threadsafe(
                     ws.send_json(event), self._loop
                 )
-            except Exception:
+            except Exception as e:
+                logger.debug(f"[EVENT_STORE] Failed to broadcast event to client {ws}: {e}")
                 dead.append(ws)
         for ws in dead:
             try:
                 self._ws_clients.remove(ws)
+                logger.debug(f"[EVENT_STORE] Removed disconnected client: {ws}")
             except ValueError:
                 pass
     

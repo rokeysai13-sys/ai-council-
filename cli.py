@@ -48,7 +48,7 @@ def check_server():
     try:
         r = requests.get(f"{API_URL}/health", timeout=2)
         return r.status_code == 200
-    except:
+    except Exception:
         return False
 
 def show_status():
@@ -113,7 +113,7 @@ def send_chat(message: str):
                             if data.get("type") == "token":
                                 sys.stdout.write(data.get("text", ""))
                                 sys.stdout.flush()
-                        except:
+                        except Exception:
                             pass
             print() # New line after stream complete
         else:

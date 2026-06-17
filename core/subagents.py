@@ -269,7 +269,7 @@ Return ONLY a JSON object: {{"project_name": "...", "repo_path_or_url": "..."}}"
             res = json.loads(r.get("response", "{}"))
             project_name = res.get("project_name", project_name)
             repo_path_or_url = res.get("repo_path_or_url", repo_path_or_url)
-        except:
+        except Exception:
             pass
             
     return run_github_agent(project_name, repo_path_or_url)

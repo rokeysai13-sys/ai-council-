@@ -54,7 +54,7 @@ rag:
 security:
   api_key_enabled: false
   api_key:         ""
-  rate_limit:      60   # requests per minute
+  rate_limit:      1000   # requests per minute
   max_input_length: 8000
   allowed_paths:
     - "C:/my_ai_team"

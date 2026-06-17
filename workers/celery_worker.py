@@ -106,7 +106,8 @@ if CELERY_OK:
             try:
                 r = req.get(url, timeout=5)
                 results[name] = "ok"
-            except:
+            except Exception as e:
+                logger.warning(f"Health check task failed for {name}: {e}")
                 results[name] = "offline"
         return results
 

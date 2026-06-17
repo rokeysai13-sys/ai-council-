@@ -6,7 +6,7 @@ from core.logger import logger
 import os, sys, threading
 from pathlib import Path
 try: from dotenv import load_dotenv; load_dotenv(Path(__file__).parent/".env")
-except: pass
+except Exception: pass
 
 BANNER = """
  ██╗  ██╗██╗██████╗  █████╗ ███╗   ██╗███╗   ██╗███╗   ██╗

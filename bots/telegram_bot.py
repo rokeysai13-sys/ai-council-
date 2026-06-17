@@ -163,7 +163,8 @@ async def cmd_status(u: Update, c):
                 lines.append(f"✅ API: online | {len(d.get('models',[]))} models")
             else:
                 lines.append(f"✅ {name}: online")
-        except:
+        except Exception as e:
+            logger.warning(f"Telegram bot check failed for {name}: {e}")
             lines.append(f"❌ {name}: offline")
     reports_count = len(list((Path(__file__).parent.parent/"reports").glob("*.md")))
     lines.append(f"📄 Reports saved: {reports_count}")

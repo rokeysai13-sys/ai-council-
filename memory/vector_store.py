@@ -382,7 +382,7 @@ def memory_stats() -> dict:
             try:
                 col = _get_collection(name)
                 stats["collections"][name] = col.count()
-            except:
+            except Exception:
                 stats["collections"][name] = 0
         return stats
     except Exception as e:

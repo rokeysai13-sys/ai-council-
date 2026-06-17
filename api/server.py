@@ -216,14 +216,16 @@ def health():
         r = req.get("http://localhost:11434/api/tags", timeout=3)
         status["ollama"] = "ok"
         status["models"] = [m["name"] for m in r.json().get("models", [])]
-    except:
+    except Exception as e:
+        logger.warning(f"[HEALTH] Ollama check failed: {e}")
         status["ollama"] = "offline"
         
     # 2. Vector DB memory status
     try:
         from memory.vector_store import memory_stats
         status["memory"] = memory_stats()
-    except:
+    except Exception as e:
+        logger.warning(f"[HEALTH] Memory check failed: {e}")
         status["memory"] = "unavailable"
         
     # 3. SQLite Database check
@@ -316,7 +318,8 @@ def chat_agent(req: ChatReq, auth=Depends(verify_api_key)):
         store_conversation(req.session_id, "user", req.message)
         store_conversation(req.session_id, "assistant", result.get("response",""))
         add_episodic_memory("master", req.message, result.get("response",""))
-    except: pass
+    except Exception as e:
+        logger.warning(f"[MEMORY] store_conversation/add_episodic_memory failed: {e}")
 
     _cache_set(cache_key, result)
     return result
@@ -390,7 +393,8 @@ def chat_research(req: ChatReq, auth=Depends(verify_api_key)):
     try:
         from memory.vector_store import add_episodic_memory
         add_episodic_memory("research", req.message, result.get("response",""))
-    except: pass
+    except Exception as e:
+        logger.warning(f"[MEMORY] add_episodic_memory (research) failed: {e}")
     
     return result
 
@@ -405,7 +409,8 @@ def chat_pipeline(req: ChatReq, auth=Depends(verify_api_key)):
     try:
         from memory.vector_store import add_episodic_memory
         add_episodic_memory("pipeline", req.message, str(result))
-    except: pass
+    except Exception as e:
+        logger.warning(f"[MEMORY] add_episodic_memory (pipeline) failed: {e}")
     
     return result
 

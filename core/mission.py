@@ -16,11 +16,13 @@ MISSIONS_FILE = Path(__file__).parent.parent / "memory" / "missions.json"
 DECISION_LOG_FILE = Path(__file__).parent.parent / "memory" / "decision_log.json"
 
 class Mission:
-    def __init__(self, goal: str, mission_id: str = None, status: str = "pending", plan: dict = None, progress: dict = None, created_at: str = None, updated_at: str = None, mode: str = "standard"):
+    def __init__(self, goal: str, mission_id: str = None, status: str = "pending", plan: dict = None, progress: dict = None, created_at: str = None, updated_at: str = None, mode: str = "standard", team: str = "research", autonomy: str = "semi"):
         self.mission_id = mission_id or str(uuid.uuid4())[:8]
         self.goal = goal
         self.status = status  # pending, running, completed, failed, paused
         self.mode = mode  # standard, multi_agent
+        self.team = team
+        self.autonomy = autonomy
         self.plan = plan or {}
         self.progress = progress or {
             "current_step": 0,
@@ -37,6 +39,8 @@ class Mission:
             "goal": self.goal,
             "status": self.status,
             "mode": self.mode,
+            "team": self.team,
+            "autonomy": self.autonomy,
             "plan": self.plan,
             "progress": self.progress,
             "created_at": self.created_at,
@@ -83,7 +87,7 @@ class MissionManager:
             if DECISION_LOG_FILE.exists():
                 try:
                     log_data = json.loads(DECISION_LOG_FILE.read_text(encoding="utf-8"))
-                except:
+                except Exception:
                     pass
             log_data.append(log_entry)
             DECISION_LOG_FILE.write_text(json.dumps(log_data, indent=2), encoding="utf-8")
@@ -137,46 +141,57 @@ class MissionManager:
             from core.multi_agent import MultiAgentOrchestrator
             saved_state = mission.progress.get("multi_agent_state")
             import asyncio
-            res = await asyncio.to_thread(
-                MultiAgentOrchestrator.run_mission,
-                mission.mission_id,
-                mission.goal,
-                saved_state
-            )
+            def _run_orchestrator():
+                return MultiAgentOrchestrator.run_mission(
+                    mission_id=mission.mission_id,
+                    goal=mission.goal,
+                    team_name=getattr(mission, "team", "research"),
+                    autonomy=getattr(mission, "autonomy", "semi"),
+                    saved_state=saved_state
+                )
+            res = await asyncio.to_thread(_run_orchestrator)
             
+            is_checkpoint = res.get("checkpoint", False)
             mission.progress["multi_agent_state"] = res.get("state", {})
             
-            vote_passed = res.get("success", False)
-            vote_tally = res.get("vote", {})
-            history_entry = f"Multi-Agent round executed. Council vote: {'Passed' if vote_passed else 'Failed'}. Approvals: {vote_tally.get('approvals')}, Rejections: {vote_tally.get('rejections')}."
-            mission.progress["history"].append(history_entry)
-            
-            if vote_passed:
-                mission.status = "completed"
-                self.log_decision(
-                    mission_id=mission.mission_id,
-                    decision_type="completion",
-                    details=f"Mission goals achieved via multi-agent team consensus.",
-                    rationale=f"Council vote passed and final reports saved to: {res.get('report_path')}"
-                )
+            if is_checkpoint:
+                mission.status = "paused"
+                history_entry = f"Multi-Agent execution paused at checkpoint: {res.get('message', '')}."
+                mission.progress["history"].append(history_entry)
             else:
-                # Check if budgets are exhausted
-                all_exhausted = True
-                for agent_state in res.get("state", {}).get("agents", []):
-                    if agent_state.get("budget", 0) > 0 and agent_state.get("status") == "continue":
-                        all_exhausted = False
-                        break
-                if all_exhausted:
-                    mission.status = "failed"
-                    mission.progress["failures"].append({"error": "All agent budgets exhausted without reaching consensus."})
+                vote_passed = res.get("success", False)
+                vote_tally = res.get("vote", {}) or {}
+                history_entry = f"Multi-Agent round executed. Council vote: {'Passed' if vote_passed else 'Failed'}."
+                if vote_tally:
+                    history_entry += f" Approvals: {vote_tally.get('approvals', 0)}, Rejections: {vote_tally.get('rejections', 0)}."
+                mission.progress["history"].append(history_entry)
+                
+                if vote_passed:
+                    mission.status = "completed"
                     self.log_decision(
                         mission_id=mission.mission_id,
-                        decision_type="task_failure",
-                        details="Agent budgets exhausted.",
-                        rationale="Multi-agent collaboration failed to reach consensus before step budget limit."
+                        decision_type="completion",
+                        details=f"Mission goals achieved via multi-agent team consensus.",
+                        rationale=f"Council vote passed and final reports saved to: {res.get('report_path')}"
                     )
                 else:
-                    mission.status = "running"
+                    # Check if budgets are exhausted
+                    all_exhausted = True
+                    for agent_state in res.get("state", {}).get("agents", []):
+                        if agent_state.get("budget", 0) > 0 and agent_state.get("status") == "continue":
+                            all_exhausted = False
+                            break
+                    if all_exhausted:
+                        mission.status = "failed"
+                        mission.progress["failures"].append({"error": "All agent budgets exhausted without reaching consensus."})
+                        self.log_decision(
+                            mission_id=mission.mission_id,
+                            decision_type="task_failure",
+                            details="Agent budgets exhausted.",
+                            rationale="Multi-agent collaboration failed to reach consensus before step budget limit."
+                        )
+                    else:
+                        mission.status = "running"
             
             mission.updated_at = datetime.datetime.now().isoformat()
             self.save_missions()

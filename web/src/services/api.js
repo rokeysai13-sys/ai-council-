@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://127.0.0.1:5000';
+const API_URL = 'http://127.0.0.1:8000';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -25,7 +25,7 @@ export const chatService = {
     if (stream && onToken) {
       return new Promise((resolve, reject) => {
         // Expose WebSocket protocol mapping
-        const wsUrl = `ws://127.0.0.1:5000/ws/chat`;
+        const wsUrl = `ws://127.0.0.1:8000/ws/chat`;
         const ws = new WebSocket(wsUrl);
         const apiKey = localStorage.getItem('kirannn_api_key');
         let fullText = '';
@@ -364,12 +364,21 @@ export const missionsService = {
   async getMission(id) {
     return this.getMissionDetails(id);
   },
-  async createMission(goal, team = 'research', maxSteps = 12) {
+  async createMission(goal, team = 'research', maxSteps = 12, autonomy = 'semi') {
     try {
-      const response = await api.post('/missions', { goal, team, max_steps: maxSteps });
+      const response = await api.post('/missions', { goal, team, max_steps: maxSteps, autonomy });
       return response.data;
     } catch (error) {
       console.error('Failed to create mission:', error);
+      throw error;
+    }
+  },
+  async resumeMission(id) {
+    try {
+      const response = await api.post(`/missions/${encodeURIComponent(id)}/step`);
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to resume/step mission ${id}:`, error);
       throw error;
     }
   }

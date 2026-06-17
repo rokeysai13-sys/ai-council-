@@ -17,8 +17,8 @@ def system_checkup():
     report.append(f"  CPU Count:       {psutil.cpu_count(logical=False)} physical, {psutil.cpu_count(logical=True)} logical")
     try:
         report.append(f"  CPU Usage:       {psutil.cpu_percent(interval=0.5)}%")
-    except:
-        report.append("  CPU Usage:       Unable to read")
+    except Exception as e:
+        report.append(f"  CPU Usage:       Unable to read ({e})")
         
     # 2. RAM Memory Info
     mem = psutil.virtual_memory()

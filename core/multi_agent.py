@@ -10,7 +10,7 @@ import time
 import datetime
 from pathlib import Path
 from core.logger import logger
-from core.llm import llm_generate
+from core.llm import llm_generate, set_active_mission_id
 from core.tools import call_tool, tools_manifest
 
 DECISION_LOG_FILE = Path(__file__).parent.parent / "memory" / "decision_log.json"
@@ -326,7 +326,7 @@ class AgentInstance:
             cleaned = re.sub(r"//.*", "", text)
             try:
                 return json.loads(cleaned)
-            except:
+            except Exception:
                 raise Exception(f"Unparseable LLM output: {text}")
 
 
@@ -358,66 +358,91 @@ class MissionDirector:
             if DECISION_LOG_FILE.exists():
                 try:
                     log_data = json.loads(DECISION_LOG_FILE.read_text(encoding="utf-8"))
-                except:
+                except Exception:
                     pass
             log_data.append(log_entry)
             DECISION_LOG_FILE.write_text(json.dumps(log_data, indent=2), encoding="utf-8")
         except Exception as e:
             logger.error(f"Failed to log decision in director: {e}")
 
-    def spawn_team(self) -> list:
+    def spawn_team(self, team_name: str = None) -> list:
         """
-        Dynamically determine team composition using LLM based on user goal.
+        Spawn a team of agents. If a valid team_name is provided, use the preset.
+        Otherwise, dynamically determine team composition using LLM based on user goal.
         """
-        prompt = (
-            f"Analyze the following goal: '{self.goal}'\n\n"
-            f"Determine the optimal team of 3 to 6 specialized AI agents needed to achieve this goal.\n"
-            f"Define a clear and helpful role description, budget (integer 5-15), and priority ('high', 'medium', or 'low') for each.\n\n"
-            f"Return strictly a JSON object with this format:\n"
-            f"{{\n"
-            f"  \"agents\": [\n"
-            f"    {{\n"
-            f"      \"name\": \"Product Manager\",\n"
-            f"      \"role\": \"PM\",\n"
-            f"      \"description\": \"Responsible for research, feature breakdown, and documentation.\",\n"
-            f"      \"budget\": 10,\n"
-            f"      \"priority\": \"high\"\n"
-            f"    }},\n"
-            f"    ...\n"
-            f"  ]\n"
-            f"}}\n"
-            f"Return only the JSON object, no introductory or concluding text."
-        )
-
-        system_prompt = "You are an AI engineering director. Break down goals into specialized agent roles."
+        agent_configs = []
         
-        fallback_agents = [
-            {"name": "Product Manager", "role": "PM", "description": "Focusses on research, task formulation, and compiling specifications.", "budget": 10, "priority": "high"},
-            {"name": "Architect", "role": "Engineer", "description": "Responsible for structural layout, file paths, and coding standards.", "budget": 8, "priority": "high"},
-            {"name": "Developer", "role": "Engineer", "description": "Responsible for writing and executing the core implementation and fixing code issues.", "budget": 12, "priority": "medium"},
-            {"name": "Security Auditor", "role": "Analyst", "description": "Reviews the implementation and design for potential security loopholes or flaws.", "budget": 8, "priority": "low"},
-            {"name": "QA Engineer", "role": "Analyst", "description": "Writes tests and validates the code for correctness.", "budget": 8, "priority": "low"}
-        ]
+        # 1. Try to load from presets first
+        if team_name:
+            try:
+                from core.teams import TEAMS, ROSTER
+                if team_name in TEAMS:
+                    preset = TEAMS[team_name]
+                    logger.info(f"[DIRECTOR] Spawning preset team: {preset['name']} ({team_name})")
+                    for agent_id in preset["agents"]:
+                        if agent_id in ROSTER:
+                            r_cfg = ROSTER[agent_id]
+                            agent_configs.append({
+                                "name": r_cfg["name"],
+                                "role": r_cfg["role"],
+                                "description": r_cfg["description"],
+                                "budget": r_cfg["budget"],
+                                "priority": r_cfg["priority"]
+                            })
+            except Exception as e:
+                logger.warning(f"[DIRECTOR] Failed to load preset team '{team_name}': {e}")
 
-        try:
-            raw = llm_generate(prompt=prompt, system=system_prompt, model="llama3")
-            # Parse JSON
-            raw_clean = raw.strip()
-            match = re.search(r"```json\s*(.*?)\s*```", raw_clean, re.DOTALL)
-            if match:
-                raw_clean = match.group(1)
-            else:
-                match_braces = re.search(r"(\{.*\})", raw_clean, re.DOTALL)
-                if match_braces:
-                    raw_clean = match_braces.group(1)
+        # 2. Dynamic spawning if no preset or fallback
+        if not agent_configs:
+            prompt = (
+                f"Analyze the following goal: '{self.goal}'\n\n"
+                f"Determine the optimal team of 3 to 6 specialized AI agents needed to achieve this goal.\n"
+                f"Define a clear and helpful role description, budget (integer 5-15), and priority ('high', 'medium', or 'low') for each.\n\n"
+                f"Return strictly a JSON object with this format:\n"
+                f"{{\n"
+                f"  \"agents\": [\n"
+                f"    {{\n"
+                f"      \"name\": \"Product Manager\",\n"
+                f"      \"role\": \"PM\",\n"
+                f"      \"description\": \"Responsible for research, feature breakdown, and documentation.\",\n"
+                f"      \"budget\": 10,\n"
+                f"      \"priority\": \"high\"\n"
+                f"    }},\n"
+                f"    ...\n"
+                f"  ]\n"
+                f"}}\n"
+                f"Return only the JSON object, no introductory or concluding text."
+            )
+
+            system_prompt = "You are an AI engineering director. Break down goals into specialized agent roles."
             
-            parsed = json.loads(raw_clean)
-            agent_configs = parsed.get("agents", [])
-            if not agent_configs:
+            fallback_agents = [
+                {"name": "Product Manager", "role": "PM", "description": "Focusses on research, task formulation, and compiling specifications.", "budget": 10, "priority": "high"},
+                {"name": "Architect", "role": "Engineer", "description": "Responsible for structural layout, file paths, and coding standards.", "budget": 8, "priority": "high"},
+                {"name": "Developer", "role": "Engineer", "description": "Responsible for writing and executing the core implementation and fixing code issues.", "budget": 12, "priority": "medium"},
+                {"name": "Security Auditor", "role": "Analyst", "description": "Reviews the implementation and design for potential security loopholes or flaws.", "budget": 8, "priority": "low"},
+                {"name": "QA Engineer", "role": "Analyst", "description": "Writes tests and validates the code for correctness.", "budget": 8, "priority": "low"}
+            ]
+
+            try:
+                raw = llm_generate(prompt=prompt, system=system_prompt, model="llama3")
+                # Parse JSON
+                raw_clean = raw.strip()
+                match = re.search(r"```json\s*(.*?)\s*```", raw_clean, re.DOTALL)
+                if match:
+                    raw_clean = match.group(1)
+                else:
+                    match_braces = re.search(r"(\{.*\})", raw_clean, re.DOTALL)
+                    if match_braces:
+                        raw_clean = match_braces.group(1)
+                
+                parsed = json.loads(raw_clean)
+                agent_configs = parsed.get("agents", [])
+                if not agent_configs:
+                    agent_configs = fallback_agents
+            except Exception as e:
+                logger.warning(f"[DIRECTOR] Failed to dynamically spawn team: {e}. Using fallback team.")
                 agent_configs = fallback_agents
-        except Exception as e:
-            logger.warning(f"[DIRECTOR] Failed to dynamically spawn team: {e}. Using fallback team.")
-            agent_configs = fallback_agents
 
         self.agents = []
         for cfg in agent_configs:
@@ -581,17 +606,23 @@ class MultiAgentOrchestrator:
     and the Multi-Agent OS director.
     """
     @staticmethod
-    def run_mission(mission_id: str, goal: str, saved_state: dict = None) -> dict:
+    def run_mission(mission_id: str, goal: str, team_name: str = None, autonomy: str = "full", saved_state: dict = None) -> dict:
         """
-        Runs the full multi-agent flow: spawning, execution rounds, council vote,
-        and saves findings/artifacts to disk.
+        Runs the multi-agent flow with autonomy checkpoint support.
         """
-        logger.info(f"[MULTI-AGENT OS] Initiating mission '{goal}' (ID: {mission_id})")
+        set_active_mission_id(mission_id)
+        logger.info(f"[MULTI-AGENT OS] Initiating mission '{goal}' (ID: {mission_id}) | Team: {team_name} | Autonomy: {autonomy}")
         director = MissionDirector(mission_id, goal)
+        
+        next_phase = "rounds"
+        round_number = 0
         
         # Load saved state if resuming
         if saved_state:
             director.blackboard.from_dict(saved_state.get("blackboard", {}))
+            next_phase = saved_state.get("next_phase", "rounds")
+            round_number = saved_state.get("round_number", 0)
+            
             # Reconstruct agents
             for a_cfg in saved_state.get("agents", []):
                 agent = AgentInstance(
@@ -607,27 +638,79 @@ class MultiAgentOrchestrator:
                 director.message_bus.register_agent(agent.name)
         else:
             # Phase 1: Spawn
-            director.spawn_team()
+            director.spawn_team(team_name=team_name)
 
-        # Phase 2: Collaborative rounds (up to 4 rounds per execution step)
-        rounds_res = director.execute_rounds(max_rounds=4)
+        rounds_res = None
+        vote_res = None
+        checkpoint_reached = False
+        checkpoint_msg = ""
 
-        # Phase 3: Council Vote
-        vote_res = director.conduct_council_vote()
+        # --- Phase 2: Collaborative rounds ---
+        if next_phase == "rounds":
+            if autonomy == "manual":
+                # Execute exactly one round
+                rounds_res = director.execute_rounds(max_rounds=1)
+                round_number += 1
+                
+                # Check if collaboration finished or max budget hit
+                active_agents = [a for a in director.agents if a.status == "continue" and a.budget > 0]
+                if not active_agents or round_number >= 4:
+                    next_phase = "vote"
+                    checkpoint_msg = f"Collaboration complete after {round_number} rounds. Ready for Council Vote."
+                else:
+                    checkpoint_msg = f"Round {round_number} complete. Paused for manual step review."
+                
+                checkpoint_reached = True
+            elif autonomy == "semi":
+                # Execute all collaboration rounds first, then pause before vote
+                rounds_res = director.execute_rounds(max_rounds=4)
+                next_phase = "vote"
+                checkpoint_msg = "All collaborative rounds complete. Review blackboard and authorize Council Vote."
+                checkpoint_reached = True
+            else:
+                # full autonomy runs rounds normally
+                rounds_res = director.execute_rounds(max_rounds=4)
+                next_phase = "vote"
+
+        # --- Phase 3: Council Vote ---
+        if next_phase == "vote" and not checkpoint_reached:
+            vote_res = director.conduct_council_vote()
+        
+        # State object to be saved/resumed
+        state_to_save = {
+            "blackboard": director.blackboard.to_dict(),
+            "agents": [a.to_dict() for a in director.agents],
+            "next_phase": next_phase,
+            "round_number": round_number
+        }
+
+        # Checkpoint Pause Return
+        if checkpoint_reached:
+            # Emit checkpoint event
+            from core.event_store import event_store
+            event_store.emit("mission.checkpoint", "system", 
+                             {"message": checkpoint_msg, "next_phase": next_phase},
+                             mission_id=mission_id, status="paused")
+            
+            set_active_mission_id("")
+            return {
+                "checkpoint": True,
+                "success": False,
+                "message": checkpoint_msg,
+                "rounds": rounds_res,
+                "state": state_to_save
+            }
 
         # Compile final results
         blackboard_all = director.blackboard.get_all()
+        success = vote_res.get("passed", False) if vote_res else False
         
-        # If vote did not pass, we don't automatically mark the mission completed.
-        # But we still write current status and output.
-        success = vote_res["passed"]
-        
-        # Let's save a detailed markdown report
+        # Save detailed report
         report_content = f"# Multi-Agent OS Execution Report: {goal}\n\n"
         report_content += f"**Mission ID:** {mission_id}  \n"
         report_content += f"**Timestamp:** {datetime.datetime.now().isoformat()}  \n"
         report_content += f"**Council Consensus Vote:** {'✅ PASSED' if success else '❌ REJECTED'}  \n"
-        report_content += f"**Vote Tally:** Approvals={vote_res['approvals']}, Rejections={vote_res['rejections']}  \n\n"
+        report_content += f"**Vote Tally:** Approvals={vote_res.get('approvals', 0)}, Rejections={vote_res.get('rejections', 0)}  \n\n"
         
         report_content += "## 👥 Spawned Specialized Team\n"
         for agent in director.agents:
@@ -635,16 +718,19 @@ class MultiAgentOrchestrator:
             report_content += f"  *Description:* {agent.role_description}\n\n"
             
         report_content += "## 🗳️ Council Ballots & Feedback\n"
-        for name, ballot in vote_res["votes"].items():
-            vote_icon = "✅ APPROVE" if ballot["vote"] == "approve" else "❌ REJECT"
-            report_content += f"### {name}: {vote_icon}\n"
-            report_content += f"{ballot['feedback']}\n\n"
+        if vote_res and "votes" in vote_res:
+            for name, ballot in vote_res["votes"].items():
+                vote_icon = "✅ APPROVE" if ballot["vote"] == "approve" else "❌ REJECT"
+                report_content += f"### {name}: {vote_icon}\n"
+                report_content += f"{ballot['feedback']}\n\n"
+        else:
+            report_content += "*No votes cast.*\n\n"
 
         report_content += "## 🧠 Blackboard (Shared Working Memory) Contents\n"
         if blackboard_all:
             for k, v in blackboard_all.items():
                 if k.endswith("_last_tool_output"):
-                    continue # Skip raw tool outputs in report to avoid clutter
+                    continue
                 report_content += f"### Key: `{k}`\n{v}\n\n"
         else:
             report_content += "*No blackboard content was written.*\n\n"
@@ -659,13 +745,11 @@ class MultiAgentOrchestrator:
         save_res = call_tool("save_report", title=f"multi_agent_{mission_id}", content=report_content)
         report_path = save_res.get("path", "")
 
+        set_active_mission_id("")
         return {
             "success": success,
             "report_path": report_path,
             "vote": vote_res,
             "rounds": rounds_res,
-            "state": {
-                "blackboard": director.blackboard.to_dict(),
-                "agents": [a.to_dict() for a in director.agents],
-            }
+            "state": state_to_save
         }

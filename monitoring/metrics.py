@@ -152,7 +152,8 @@ def get_stats() -> dict:
             "ram_percent": psutil.virtual_memory().percent,
             "ram_gb": round(psutil.virtual_memory().used / 1e9, 2)
         }
-    except:
+    except Exception as e:
+        logger.warning(f"Failed to get psutil stats: {e}")
         sys_stats = {}
     return {**_stats, "system": sys_stats, "prometheus": PROM_OK}
 

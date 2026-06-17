@@ -48,7 +48,7 @@ def load_user_memory(session_id, username="guest"):
         try:
             from database import load_persistent_memory
             memory[session_id] = load_persistent_memory(username)
-        except:
+        except Exception:
             memory[session_id] = []
     return memory.get(session_id, [])
 
@@ -58,7 +58,7 @@ def clear_memory(session_id, username="guest"):
     try:
         from database import clear_persistent_memory
         clear_persistent_memory(username)
-    except:
+    except Exception:
         pass
 
 def _ask(model_key, prompt, history=None, debate_phase=None):

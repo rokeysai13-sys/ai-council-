@@ -247,7 +247,8 @@ def run_tool_loop(message: str, model: str, soul: str, memory: str, tools: str) 
             timeout=60
         )
         final = r.get("response", "Task completed.").strip()
-    except:
+    except Exception as e:
+        logger.warning(f"Failed to generate final task summary: {e}")
         final = "Task completed. Check the trace for details."
 
     return {"response": final, "trace": trace, "steps": len(trace)}
@@ -265,7 +266,7 @@ def _parse_tool_call(text: str):
         obj = json.loads(text)
         if "tool" in obj:
             return obj
-    except:
+    except Exception:
         pass
 
     # 2. JSON inside ```json ... ``` or ``` ... ```
@@ -276,7 +277,7 @@ def _parse_tool_call(text: str):
                 obj = json.loads(m.group(1))
                 if "tool" in obj:
                     return obj
-            except:
+            except Exception:
                 pass
 
     # 3. Any JSON object containing "tool" key
@@ -285,7 +286,7 @@ def _parse_tool_call(text: str):
             obj = json.loads(m.group())
             if "tool" in obj:
                 return obj
-        except:
+        except Exception:
             pass
 
     # 4. Nested JSON (args as nested object)
@@ -295,7 +296,7 @@ def _parse_tool_call(text: str):
             obj = json.loads(m.group())
             if "tool" in obj:
                 return obj
-        except:
+        except Exception:
             pass
 
     return None

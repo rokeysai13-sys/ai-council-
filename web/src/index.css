@@ -516,3 +516,12 @@ button {
   cursor: pointer;
 }
 
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.pulse-glowing {
+  animation: pulse-glow 1.8s infinite ease-in-out;
+}
+

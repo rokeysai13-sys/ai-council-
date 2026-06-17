@@ -30,7 +30,7 @@ def get_git_info(repo_path: str) -> dict:
             stderr=subprocess.DEVNULL
         ).decode("utf-8").strip()
         info["branch"] = branch
-    except:
+    except Exception:
         pass
 
     try:
@@ -41,7 +41,7 @@ def get_git_info(repo_path: str) -> dict:
             stderr=subprocess.DEVNULL
         ).decode("utf-8").strip()
         info["commits"] = [c.strip() for c in commits_raw.split("\n") if c.strip()]
-    except:
+    except Exception:
         pass
 
     try:
@@ -52,7 +52,7 @@ def get_git_info(repo_path: str) -> dict:
             stderr=subprocess.DEVNULL
         ).decode("utf-8").strip()
         info["status"] = status_raw
-    except:
+    except Exception:
         pass
 
     return info
@@ -81,7 +81,7 @@ def get_github_api_info(repo_url: str) -> dict:
             res = r.json()
             info["description"] = res.get("description", "")
             info["open_issues_count"] = res.get("open_issues_count", 0)
-    except:
+    except Exception:
         pass
 
     try:
@@ -89,7 +89,7 @@ def get_github_api_info(repo_url: str) -> dict:
         r = requests.get(f"https://api.github.com/repos/{owner}/{repo}/commits?per_page=5", headers=headers, timeout=5)
         if r.status_code == 200:
             info["commits"] = [c["commit"]["message"].split("\n")[0] for c in r.json()]
-    except:
+    except Exception:
         pass
 
     return info
@@ -254,7 +254,7 @@ def generate_architecture_overview(directory_path: str) -> str:
     if readme_path.exists():
         try:
             readme_content = readme_path.read_text(encoding="utf-8", errors="replace")[:1000]
-        except:
+        except Exception:
             pass
 
     prompt = (
