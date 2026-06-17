@@ -6339,3 +6339,225 @@ telegram.error.TimedOut: Timed out
 2026-06-14 20:37:47,141 [INFO] apscheduler.scheduler: Added job "memory_cleanup_task" to job store "default"
 2026-06-14 20:37:47,141 [INFO] apscheduler.scheduler: Added job "run_pending_scheduled_tasks" to job store "default"
 2026-06-14 20:37:47,141 [INFO] apscheduler.scheduler: Scheduler started
+2026-06-14 20:51:17,992 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 21:06:17 IST)" (scheduled at 2026-06-14 20:51:17.972527+05:30)
+2026-06-14 20:51:18,002 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 21:06:17 IST)" executed successfully
+2026-06-14 21:06:17,982 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 21:21:17 IST)" (scheduled at 2026-06-14 21:06:17.972527+05:30)
+2026-06-14 21:06:17,991 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 21:21:17 IST)" executed successfully
+2026-06-14 21:21:17,981 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 21:36:17 IST)" (scheduled at 2026-06-14 21:21:17.972527+05:30)
+2026-06-14 21:21:17,983 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 21:36:17 IST)" executed successfully
+2026-06-14 21:36:17,978 [INFO] apscheduler.executors.default: Running job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-14 22:36:17 IST)" (scheduled at 2026-06-14 21:36:17.961828+05:30)
+2026-06-14 21:36:17,980 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 21:51:17 IST)" (scheduled at 2026-06-14 21:36:17.972527+05:30)
+2026-06-14 21:36:17,988 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 21:51:17 IST)" executed successfully
+2026-06-14 21:36:24,540 [INFO] apscheduler.executors.default: Job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-14 22:36:17 IST)" executed successfully
+2026-06-14 21:51:17,982 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 22:06:17 IST)" (scheduled at 2026-06-14 21:51:17.972527+05:30)
+2026-06-14 21:51:17,986 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 22:06:17 IST)" executed successfully
+2026-06-14 22:05:32,344 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:05:43,698 [INFO] sentence_transformers.base.model: No device provided, using cpu
+2026-06-14 22:05:44,140 [INFO] sentence_transformers.base.model: No modules.json found for cross-encoder/ms-marco-MiniLM-L-6-v2, initializing a new CrossEncoder model.
+2026-06-14 22:06:17,992 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 22:21:17 IST)" (scheduled at 2026-06-14 22:06:17.972527+05:30)
+2026-06-14 22:06:18,017 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 22:21:17 IST)" executed successfully
+2026-06-14 22:09:55,725 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:10:02,615 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:10:05,426 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:10:08,709 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:11:06,982 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:11:09,960 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:12:23,360 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-14 22:12:23,369 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-14 22:12:23,369 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-14 22:12:23,370 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-14 22:12:23,370 [INFO] apscheduler.scheduler: Added job "morning_brief_task" to job store "default"
+2026-06-14 22:12:23,370 [INFO] apscheduler.scheduler: Added job "health_check_task" to job store "default"
+2026-06-14 22:12:23,370 [INFO] apscheduler.scheduler: Added job "memory_cleanup_task" to job store "default"
+2026-06-14 22:12:23,370 [INFO] apscheduler.scheduler: Added job "run_pending_scheduled_tasks" to job store "default"
+2026-06-14 22:12:23,370 [INFO] apscheduler.scheduler: Scheduler started
+2026-06-14 22:12:29,486 [ERROR] telegram.ext: Network Retry Loop (Bootstrap Initialize Application): Timed out: Timed out. Failed run number 0 of 0. Aborting.
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 394, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        pool_request.request
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection.py", line 101, in handle_async_request
+    raise exc
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection.py", line 78, in handle_async_request
+    stream = await self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_async\connection.py", line 124, in _connect
+    stream = await self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_backends\auto.py", line 31, in connect_tcp
+    return await self._backend.connect_tcp(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_backends\anyio.py", line 113, in connect_tcp
+    with map_exceptions(exc_map):
+         ~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_httpxrequest.py", line 279, in do_request
+    res = await self._client.request(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 393, in handle_async_request
+    with map_httpcore_exceptions():
+         ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai kiran\AppData\Local\Programs\Python\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\my_ai_team\.venv\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_utils\networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_utils\networkloop.py", line 136, in do_action
+    await action_cb()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_application.py", line 489, in initialize
+    await self.bot.initialize()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 316, in initialize
+    await super().initialize()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 857, in initialize
+    await self.get_me()
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 2008, in get_me
+    return await super().get_me(
+           ^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 990, in get_me
+    result = await self._post(
+             ^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 305, in _request_wrapper
+    code, payload = await self.do_request(
+                    ^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\my_ai_team\.venv\Lib\site-packages\telegram\request\_httpxrequest.py", line 296, in do_request
+    raise TimedOut from err
+telegram.error.TimedOut: Timed out
+2026-06-14 22:14:02,321 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-14 22:14:02,329 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-14 22:14:02,331 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-14 22:14:02,332 [INFO] apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-14 22:14:02,335 [INFO] apscheduler.scheduler: Added job "morning_brief_task" to job store "default"
+2026-06-14 22:14:02,335 [INFO] apscheduler.scheduler: Added job "health_check_task" to job store "default"
+2026-06-14 22:14:02,336 [INFO] apscheduler.scheduler: Added job "memory_cleanup_task" to job store "default"
+2026-06-14 22:14:02,336 [INFO] apscheduler.scheduler: Added job "run_pending_scheduled_tasks" to job store "default"
+2026-06-14 22:14:02,337 [INFO] apscheduler.scheduler: Scheduler started
+2026-06-14 22:14:42,494 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:14:50,000 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:15:22,197 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:15:25,985 [INFO] sentence_transformers.base.model: No device provided, using cpu
+2026-06-14 22:15:25,985 [INFO] sentence_transformers.base.model: No device provided, using cpu
+2026-06-14 22:15:27,551 [INFO] sentence_transformers.base.model: No modules.json found for cross-encoder/ms-marco-MiniLM-L-6-v2, initializing a new CrossEncoder model.
+2026-06-14 22:15:29,590 [INFO] sentence_transformers.base.model: No modules.json found for cross-encoder/ms-marco-MiniLM-L-6-v2, initializing a new CrossEncoder model.
+2026-06-14 22:15:45,476 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:15:49,251 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:26:58,361 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:27:11,007 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:27:14,636 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:27:23,380 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 22:42:23 IST)" (scheduled at 2026-06-14 22:27:23.370084+05:30)
+2026-06-14 22:27:23,397 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 22:42:23 IST)" executed successfully
+2026-06-14 22:27:52,746 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:28:00,315 [INFO] httpx: HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-14 22:42:23,391 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 22:57:23 IST)" (scheduled at 2026-06-14 22:42:23.370084+05:30)
+2026-06-14 22:42:23,395 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 22:57:23 IST)" executed successfully
+2026-06-14 22:57:23,377 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 23:12:23 IST)" (scheduled at 2026-06-14 22:57:23.370084+05:30)
+2026-06-14 22:57:23,380 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 23:12:23 IST)" executed successfully
+2026-06-14 23:12:23,382 [INFO] apscheduler.executors.default: Running job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-15 00:12:23 IST)" (scheduled at 2026-06-14 23:12:23.369562+05:30)
+2026-06-14 23:12:23,383 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 23:27:23 IST)" (scheduled at 2026-06-14 23:12:23.370084+05:30)
+2026-06-14 23:12:23,389 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 23:27:23 IST)" executed successfully
+2026-06-14 23:12:30,051 [INFO] apscheduler.executors.default: Job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-15 00:12:23 IST)" executed successfully
+2026-06-14 23:27:23,378 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 23:42:23 IST)" (scheduled at 2026-06-14 23:27:23.370084+05:30)
+2026-06-14 23:27:23,381 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 23:42:23 IST)" executed successfully
+2026-06-14 23:42:23,372 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 23:57:23 IST)" (scheduled at 2026-06-14 23:42:23.370084+05:30)
+2026-06-14 23:42:23,375 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-14 23:57:23 IST)" executed successfully
+2026-06-14 23:57:23,377 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-15 00:12:23 IST)" (scheduled at 2026-06-14 23:57:23.370084+05:30)
+2026-06-14 23:57:23,380 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-15 00:12:23 IST)" executed successfully
+2026-06-15 00:00:00,007 [INFO] apscheduler.executors.default: Running job "memory_cleanup_task (trigger: cron[hour='0', minute='0'], next run at: 2026-06-16 00:00:00 IST)" (scheduled at 2026-06-15 00:00:00+05:30)
+2026-06-15 00:00:00,147 [INFO] apscheduler.executors.default: Job "memory_cleanup_task (trigger: cron[hour='0', minute='0'], next run at: 2026-06-16 00:00:00 IST)" executed successfully
+2026-06-15 00:12:23,376 [INFO] apscheduler.executors.default: Running job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-15 01:12:23 IST)" (scheduled at 2026-06-15 00:12:23.369562+05:30)
+2026-06-15 00:12:23,377 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-15 00:27:23 IST)" (scheduled at 2026-06-15 00:12:23.370084+05:30)
+2026-06-15 00:12:23,382 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-15 00:27:23 IST)" executed successfully
+2026-06-15 00:12:29,632 [INFO] apscheduler.executors.default: Job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-15 01:12:23 IST)" executed successfully
+2026-06-15 00:27:23,373 [INFO] apscheduler.executors.default: Running job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-15 00:42:23 IST)" (scheduled at 2026-06-15 00:27:23.370084+05:30)
+2026-06-15 00:27:23,377 [INFO] apscheduler.executors.default: Job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-15 00:42:23 IST)" executed successfully
+2026-06-15 03:29:33,532 [WARNING] apscheduler.executors.default: Run time of job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-15 03:42:23 IST)" was missed by 0:02:10.162357
+2026-06-15 03:29:33,532 [WARNING] apscheduler.executors.default: Run time of job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-15 04:12:23 IST)" was missed by 0:17:10.163320
+2026-06-15 19:27:43,541 [WARNING] apscheduler.executors.default: Run time of job "run_pending_scheduled_tasks (trigger: interval[0:15:00], next run at: 2026-06-15 19:42:23 IST)" was missed by 0:00:20.171775
+2026-06-15 19:27:43,556 [WARNING] apscheduler.executors.default: Run time of job "health_check_task (trigger: interval[1:00:00], next run at: 2026-06-15 20:12:23 IST)" was missed by 0:15:20.186525
+2026-06-15 19:27:43,556 [WARNING] apscheduler.executors.default: Run time of job "morning_brief_task (trigger: cron[hour='8', minute='0'], next run at: 2026-06-16 08:00:00 IST)" was missed by 11:27:43.556391

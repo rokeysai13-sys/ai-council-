@@ -360,6 +360,39 @@ export const missionsService = {
       console.error(`Failed to fetch mission details for ${id}:`, error);
       return { status: 'error', message: error.message };
     }
+  },
+  async getMission(id) {
+    return this.getMissionDetails(id);
+  },
+  async createMission(goal, team = 'research', maxSteps = 12) {
+    try {
+      const response = await api.post('/missions', { goal, team, max_steps: maxSteps });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create mission:', error);
+      throw error;
+    }
+  }
+};
+
+export const eventsService = {
+  async getEvents(params = {}) {
+    try {
+      const response = await api.get('/events', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Events search error:', error);
+      return [];
+    }
+  },
+  async getMissionEvents(missionId) {
+    try {
+      const response = await api.get(`/events/mission/${missionId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to fetch events for mission ${missionId}:`, error);
+      return [];
+    }
   }
 };
 

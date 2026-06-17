@@ -125,12 +125,28 @@ class AgentInstance:
         """
         Executes a single step in the agent's loop. Parses its input and updates blackboard/sends messages.
         """
+        from core.event_store import event_store
+        
+        # State transition: IDLE -> PLANNING
+        event_store.emit("agent.state_change", self.name, 
+                         {"from": "IDLE", "to": "PLANNING"},
+                         mission_id=getattr(self, "mission_id", None))
+
         if self.budget <= 0:
             self.status = "done"
             logger.info(f"[AGENT {self.name}] Step budget exhausted.")
+            # State transition: PLANNING -> FAILED
+            event_store.emit("agent.state_change", self.name, 
+                             {"from": "PLANNING", "to": "FAILED"},
+                             mission_id=getattr(self, "mission_id", None))
             return {"status": "done", "reason": "Budget exhausted"}
 
         self.budget -= 1
+        
+        # State transition: PLANNING -> THINKING
+        event_store.emit("agent.state_change", self.name, 
+                         {"from": "PLANNING", "to": "THINKING"},
+                         mission_id=getattr(self, "mission_id", None))
 
         # Fetch inbox
         inbox_msgs = message_bus.get_messages(self.name)
@@ -203,13 +219,40 @@ class AgentInstance:
         logger.info(f"[AGENT {self.name}] Thought: {thought}")
         result_details = {"thought": thought, "action": action}
 
+        # Emit thinking reasoning event (agent.thinking)
+        event_store.emit("agent.thinking", self.name,
+                         {"thought": thought},
+                         mission_id=getattr(self, "mission_id", None))
+
         if action == "call_tool":
             tool_name = res.get("tool_name")
             tool_args = res.get("tool_args", {})
             logger.info(f"[AGENT {self.name}] Calling tool {tool_name} with args {tool_args}")
+            
+            # Emit tool call event
+            event_store.emit("agent.tool_call", self.name,
+                             {"tool": tool_name, "args_preview": str(tool_args)[:200]},
+                             mission_id=getattr(self, "mission_id", None), status="running")
+            
+            # State transition: THINKING -> EXECUTING
+            event_store.emit("agent.state_change", self.name, 
+                             {"from": "THINKING", "to": "EXECUTING"},
+                             mission_id=getattr(self, "mission_id", None))
+
             if tool_name:
                 tool_res = call_tool(tool_name, **tool_args)
                 logger.info(f"[AGENT {self.name}] Tool response: {str(tool_res)[:200]}")
+                
+                # Emit tool result event
+                event_store.emit("agent.tool_result", self.name,
+                                 {"tool": tool_name, "success": True, "preview": str(tool_res)[:200]},
+                                 mission_id=getattr(self, "mission_id", None))
+                
+                # State transition: EXECUTING -> THINKING
+                event_store.emit("agent.state_change", self.name, 
+                                 {"from": "EXECUTING", "to": "THINKING"},
+                                 mission_id=getattr(self, "mission_id", None))
+                
                 # Save tool response to blackboard for current visibility
                 blackboard.write(
                     key=f"{self.name}_last_tool_output",
@@ -228,6 +271,10 @@ class AgentInstance:
             val = mem_up.get("value")
             rationale = mem_up.get("rationale", "")
             if key and val:
+                # Emit memory write event
+                event_store.emit("agent.memory_write", self.name,
+                                 {"key": key, "preview": str(val)[:150]},
+                                 mission_id=getattr(self, "mission_id", None))
                 blackboard.write(key, val, self.name, rationale)
                 result_details["memory_update"] = {"key": key, "rationale": rationale}
             else:
@@ -238,10 +285,24 @@ class AgentInstance:
             recipient = msg_data.get("recipient")
             content = msg_data.get("content")
             if recipient and content:
+                # Emit message event
+                event_store.emit("agent.message", self.name,
+                                 {"to": recipient, "content": content[:200]},
+                                 mission_id=getattr(self, "mission_id", None))
                 message_bus.send_message(self.name, recipient, content)
                 result_details["message"] = {"recipient": recipient}
             else:
                 result_details["error"] = "Invalid message parameters"
+
+        # State transition at end of step
+        if self.status == "done":
+            event_store.emit("agent.state_change", self.name, 
+                             {"from": "THINKING", "to": "COMPLETED"},
+                             mission_id=getattr(self, "mission_id", None))
+        else:
+            event_store.emit("agent.state_change", self.name, 
+                             {"from": "THINKING", "to": "IDLE"},
+                             mission_id=getattr(self, "mission_id", None))
 
         return result_details
 
@@ -367,6 +428,7 @@ class MissionDirector:
                 budget=cfg.get("budget", 10),
                 priority=cfg.get("priority", "medium")
             )
+            agent.mission_id = self.mission_id
             self.agents.append(agent)
             self.message_bus.register_agent(agent.name)
 
@@ -480,9 +542,24 @@ class MissionDirector:
             else:
                 rejections += 1
             logger.info(f"[COUNCIL] Agent '{agent.name}' voted: {vote.upper()} | Feedback: {feedback[:100]}...")
+            
+            # Emit council vote event
+            from core.event_store import event_store
+            event_store.emit("council.vote_cast", agent.name,
+                             {"vote": vote, "confidence": 1.0, "reason": feedback[:200]},
+                             mission_id=self.mission_id)
 
         passed = approvals > rejections
         tally_str = f"Approvals: {approvals}, Rejections: {rejections}"
+        tally_dict = {"approvals": approvals, "rejections": rejections}
+        consensus = (approvals / len(self.agents)) * 100 if self.agents else 0
+        
+        # Emit council result event
+        from core.event_store import event_store
+        event_store.emit("council.result", "council",
+                         {"passed": passed, "tally": tally_dict, 
+                          "consensus_pct": consensus},
+                         mission_id=self.mission_id)
         
         self.log_decision(
             decision_type="council_vote",
@@ -525,6 +602,7 @@ class MultiAgentOrchestrator:
                     priority=a_cfg["priority"]
                 )
                 agent.status = a_cfg["status"]
+                agent.mission_id = mission_id
                 director.agents.append(agent)
                 director.message_bus.register_agent(agent.name)
         else:

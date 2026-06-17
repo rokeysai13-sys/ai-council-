@@ -19,6 +19,9 @@ from contextlib import asynccontextmanager
 from typing import Optional, Any
 
 from config.loader import cfg
+from api.routes.events import router as events_router
+from api.routes.missions import router as missions_router
+from api.routes.council import router as council_router
 from monitoring.metrics import record_request, record_agent_run, record_error, get_metrics_text, get_stats, Timer
 
 BASE = Path(__file__).parent.parent
@@ -79,12 +82,22 @@ async def lifespan(app: FastAPI):
         start_autonomous_mode()
     except Exception as e:
         logger.error(f"[ERROR] Autonomous mode start failed: {e}")
+    
+    # Initialize the event store loop
+    import asyncio
+    from core.event_store import event_store
+    event_store.set_loop(asyncio.get_running_loop())
+    
     yield
     logger.info("kirannn shutting down.")
 
 app = FastAPI(title="kirannn", version="3.0.0", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+app.include_router(events_router)
+app.include_router(missions_router)
+app.include_router(council_router)
 
 if (BASE/"index.html").exists():
     app.mount("/static", StaticFiles(directory=str(BASE)), name="static")
@@ -804,52 +817,7 @@ def sensors_list(auth=Depends(verify_api_key)):
     from core.sensors import get_sensor_hub
     return {"sensors": get_sensor_hub().list_sensors()}
 
-# ── Autonomous Mission Control endpoints ─────────────────────────────────────
-
-@app.post("/missions")
-def create_mission_endpoint(req: MissionReq, auth=Depends(verify_api_key)):
-    """Create a new stateful autonomous mission and generate its subtasks."""
-    from core.mission import MissionManager
-    manager = MissionManager()
-    mission = manager.create_mission(req.goal, req.mode)
-    return {"status": "ok", "mission": mission.to_dict()}
-
-@app.get("/missions")
-def list_missions_endpoint(auth=Depends(verify_api_key)):
-    """List all stateful autonomous missions."""
-    from core.mission import MissionManager
-    manager = MissionManager()
-    return {"status": "ok", "missions": [m.to_dict() for m in manager.missions.values()]}
-
-@app.get("/missions/{mission_id}")
-def get_mission_endpoint(mission_id: str, auth=Depends(verify_api_key)):
-    """Get status of a specific mission."""
-    from core.mission import MissionManager
-    manager = MissionManager()
-    mission = manager.missions.get(mission_id)
-    if not mission:
-        return {"status": "error", "message": "Mission not found"}
-    return {"status": "ok", "mission": mission.to_dict()}
-
-@app.post("/missions/{mission_id}/step")
-async def execute_mission_step_endpoint(mission_id: str, auth=Depends(verify_api_key)):
-    """Execute the next step in the mission's plan."""
-    from core.mission import MissionManager
-    manager = MissionManager()
-    result = await manager.execute_mission_step(mission_id)
-    return result
-
-@app.get("/decisions")
-def get_decision_log(auth=Depends(verify_api_key)):
-    """Retrieve the log of all autonomous decision records."""
-    import json
-    from core.mission import DECISION_LOG_FILE
-    if DECISION_LOG_FILE.exists():
-        try:
-            return json.loads(DECISION_LOG_FILE.read_text(encoding="utf-8"))
-        except:
-            return []
-    return []
+# ── Autonomous Mission Control endpoints ── Removed (handled by routes) ──
 
 # ── Project Memory endpoints ──────────────────────────────────────────────────
 
